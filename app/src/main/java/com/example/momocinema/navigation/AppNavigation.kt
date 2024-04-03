@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.ViewModel.SelectFilmViewModel
+import com.example.momocinema.data.Datasource
 import com.example.momocinema.screens.FilmInfo
 import com.example.momocinema.screens.SelectFilmScreen
 
@@ -13,14 +14,14 @@ import com.example.momocinema.screens.SelectFilmScreen
 fun CinemaTicketApp(navControler:NavHostController){
     val selectFilmViewModel = SelectFilmViewModel()
 
-    NavHost(navController = navControler, startDestination = "select_film"){
+    NavHost(navController = navControler, startDestination = "film_info"){
         composable(ScreenName.SelectFilmScreen.route){
             val filmSelectState = selectFilmViewModel.listFilmSelectState
             SelectFilmScreen(selectFilmViewModel,navigateToAnotherScreen = {})
         }
         composable(ScreenName.FilmInfoScreen.route){
 //            get film from back stack entry
-//            FilmInfo(film,navigateToAnotherScreen = {})
+            FilmInfo(Datasource().loadFilms()[0])
         }
     }
 }

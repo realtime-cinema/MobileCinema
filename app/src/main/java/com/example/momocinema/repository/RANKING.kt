@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RANKING(
-    val id:String,
-    val dest_id:String,
-    val ranking:String,
+    val id:Int,
+    val dest_id:Int,
+    val ranking:Int,
 ):Parcelable
 
 data class RankingRespone(val RankingList:List<RANKING>)

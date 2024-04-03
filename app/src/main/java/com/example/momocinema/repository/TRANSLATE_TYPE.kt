@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TRANSLATE_TYPE(
-    val id:String,
+    val id:Int,
     val translate_type:String,
 ):Parcelable
 

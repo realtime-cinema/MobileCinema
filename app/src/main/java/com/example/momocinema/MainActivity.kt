@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.navigation.CinemaTicketApp
+import com.example.momocinema.screens.FilmInfo
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,8 +27,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CinemaTicketApp(navControler = navController)
-
+//                    CinemaTicketApp(navControler = navController)
+                    FilmInfo(film = Datasource().loadFilms()[0])
                 }
             }
         }

@@ -6,10 +6,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FILM_PRICE(
-    val id:String,
-    val film_id:String,
+    val id:Int,
+    val film_id:Int,
     val type:String,
-    val price:String,
+    val price:Int,
 ):Parcelable
 
 data class FilmPriceRespone(val FilmPriceList:List<FILM_PRICE>)

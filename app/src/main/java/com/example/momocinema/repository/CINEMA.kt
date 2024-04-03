@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CINEMA(
-    val id:String,
+    val id:Int,
     val variant:String,
     val name:String,
 ):Parcelable

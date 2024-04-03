@@ -14,6 +14,18 @@ class SelectFilmViewModel:ViewModel() {
     init {
         fetchListFilm()
     }
+
+    // fake data here----begin
+    var listFilmSelectStateFake = mutableStateOf(FilmSelectState())
+    fun fakeFetchListFilm(){
+        listFilmSelectStateFake.value.copy(
+            error = false,
+            loading = false,
+            listRanking = listOf()
+        )
+    }
+
+    // fake data here----end
     private var _listFilmSelectState = mutableStateOf(FilmSelectState())
     var listFilmSelectState = _listFilmSelectState
 
@@ -26,7 +38,7 @@ class SelectFilmViewModel:ViewModel() {
         currentTime = System.currentTimeMillis()
         var listPerforming:MutableList<FILM> = mutableListOf()
         for (item in list){
-            if (convertStringDayToLong(item.release_date)<=currentTime){
+            if (convertStringDayToLong(item.release_date.toString())<=currentTime){
                 listPerforming.add(item)
             }
         }
@@ -36,7 +48,7 @@ class SelectFilmViewModel:ViewModel() {
         currentTime = System.currentTimeMillis()
         var listHaventPerformed:MutableList<FILM> = mutableListOf()
         for (item in list){
-            if (convertStringDayToLong(item.release_date)>currentTime){
+            if (convertStringDayToLong(item.release_date.toString())>currentTime){
                 listHaventPerformed.add(item)
             }
         }

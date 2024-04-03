@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class COMMENT(
-    val id:String,
-    val user_id:String,
-    val dest_id:String,
+    val id:Int,
+    val user_id:Int,
+    val dest_id:Int,
     val body:String,
 ):Parcelable
 

@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class VIEW_TYPE(
-    val id:String,
+    val id:Int,
     val view_type:String,
 ):Parcelable
 

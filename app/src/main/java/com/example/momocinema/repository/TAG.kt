@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TAG(
-    val id:String,
+    val id:Int,
     val tag:String,
 ):Parcelable
 

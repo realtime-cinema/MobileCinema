@@ -5,10 +5,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CINEMA_ROOM(
-    val id:String,
-    val cinema_id:String,
-    val cinema_layout_id:String,
-    val type:String,
+    val id:Int,
+    val cinema_id:Int,
+    val cinema_layout_id:Int,
+    val type:Int,
     val name:String,
 ):Parcelable
 
