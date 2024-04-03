@@ -14,9 +14,8 @@ import com.example.momocinema.screens.SelectFilmScreen
 fun CinemaTicketApp(navControler:NavHostController){
     val selectFilmViewModel = SelectFilmViewModel()
 
-    NavHost(navController = navControler, startDestination = "film_info"){
+    NavHost(navController = navControler, startDestination = "select_film"){
         composable(ScreenName.SelectFilmScreen.route){
-            val filmSelectState = selectFilmViewModel.listFilmSelectState
             SelectFilmScreen(selectFilmViewModel,navigateToAnotherScreen = {})
         }
         composable(ScreenName.FilmInfoScreen.route){

@@ -18,6 +18,7 @@ import com.example.momocinema.repository.COMMENT
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.FILM_CAST
 import com.example.momocinema.repository.PERFORM
+import com.example.momocinema.repository.RANKING
 import java.sql.Timestamp
 
 class DatasourceCloneAPIData() {
@@ -29,6 +30,17 @@ class DatasourceCloneAPIData() {
             FILM_CAST(3, "Paul Atreides", "An interesting cast"),
             FILM_CAST(4, "Paul Atreides", "An interesting cast"),
             FILM_CAST(5, "Paul Atreides", "An interesting cast"),
+        )
+    }
+    fun loadRanking(): List<RANKING> {
+        return listOf<RANKING>(
+            RANKING(1, 1, 8),
+            RANKING(2, 2, 6),
+            RANKING(3, 3, 7),
+            RANKING(4, 4, 9),
+            RANKING(5, 5, 10),
+            RANKING(6, 6, 8),
+            RANKING(7, 7, 5),
         )
     }
     fun loadFilms(): List<FILM> {

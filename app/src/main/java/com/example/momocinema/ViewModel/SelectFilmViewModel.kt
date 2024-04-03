@@ -5,27 +5,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.momocinema.APIService.recipeService
+import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.RANKING
 import kotlinx.coroutines.launch
 
 class SelectFilmViewModel:ViewModel() {
+    private val _listFilmSelectStateFake = mutableStateOf(FilmSelectState())
+    val listFilmSelectStateFake = _listFilmSelectStateFake
 
-    init {
-        fetchListFilm()
-    }
+
+
 
     // fake data here----begin
-    var listFilmSelectStateFake = mutableStateOf(FilmSelectState())
     fun fakeFetchListFilm(){
-        listFilmSelectStateFake.value.copy(
+        _listFilmSelectStateFake.value = _listFilmSelectStateFake.value.copy(
             error = false,
             loading = false,
-            listRanking = listOf()
+            listRanking = DatasourceCloneAPIData().loadRanking(),
+            listFilm = DatasourceCloneAPIData().loadFilms(),
+            listFilmHaventPerformed = DatasourceCloneAPIData().loadFilms(),
+            listFilmOutstanding = DatasourceCloneAPIData().loadFilms(),
+            listFilmPerforming = DatasourceCloneAPIData().loadFilms(),
         )
     }
 
     // fake data here----end
+
+    init {
+        /*fetchListFilm()*/
+        fakeFetchListFilm()
+    }
+
     private var _listFilmSelectState = mutableStateOf(FilmSelectState())
     var listFilmSelectState = _listFilmSelectState
 

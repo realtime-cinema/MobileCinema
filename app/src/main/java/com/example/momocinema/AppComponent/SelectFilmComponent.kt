@@ -92,7 +92,7 @@ fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: S
         ) {
             if (purposeTitle == "Phim sắp chiếu")
                 Text(
-                    text = film.release_date,
+                    text = film.release_date.toString(),
                     fontWeight = FontWeight(600),
                     lineHeight = 1.25.sp,
                     fontSize = 13.sp,
@@ -110,11 +110,11 @@ fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: S
                         modifier = Modifier.size(12.dp)
                     )
                     Text(
-                        text = " ${listFilmViewModel.averageRankOfFilm(listFilmViewModel.listFilmSelectState.value.listRanking, film = film)}/10 ",
+                        text = " ${listFilmViewModel.averageRankOfFilm(listFilmViewModel./*listFilmSelectState*/listFilmSelectStateFake.value.listRanking, film = film)}/10 ",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.W400
                     )
-                    numberOfReviews(amount = listFilmViewModel.totalRankOfFilm(listFilmViewModel.listFilmSelectState.value.listRanking, film = film), style = MaterialTheme.typography.labelSmall)
+                    numberOfReviews(amount = listFilmViewModel.totalRankOfFilm(listFilmViewModel./*listFilmSelectState*/listFilmSelectStateFake.value.listRanking, film = film), style = MaterialTheme.typography.labelSmall)
                 }
             Text(
                 text = film.title,
@@ -146,7 +146,8 @@ fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: S
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CarouselCard(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, pagerState: PagerState, modifier: Modifier = Modifier.fillMaxWidth()) {
-    val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm
+    /*val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm*/
+    val listFilm = listFilmViewModel.listFilmSelectStateFake.value.listFilm
     HorizontalPager(
         beyondBoundsPageCount = 5,
         state = pagerState,
@@ -176,7 +177,8 @@ fun CarouselCard(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, p
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListTrendingNow(listFilmViewModel:SelectFilmViewModel,purposeTitle: String, modifier: Modifier = Modifier.fillMaxWidth()) {
-    val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm
+    /*val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm*/
+    val listFilm = listFilmViewModel.listFilmSelectStateFake.value.listFilm
     val pagerState = rememberPagerState(initialPage = 2) {
         if (listFilm.size > 5) 5 else listFilm.size
     }
@@ -229,7 +231,8 @@ fun titleListFilm(
 
 @Composable
 fun briefFilmList(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, modifier: Modifier = Modifier) {
-    val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm
+    /*val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm*/
+    val listFilm = listFilmViewModel.listFilmSelectStateFake.value.listFilm
     Column(
         modifier = Modifier.padding(top = 20.dp, bottom = 6.dp)
     ) {
