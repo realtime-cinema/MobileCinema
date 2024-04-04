@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.momocinema.AppComponent.CustomButton
 import com.example.momocinema.AppComponent.CustomTopAppBar
 import com.example.momocinema.AppComponent.castInfo
+import com.example.momocinema.AppComponent.createNewComment
 import com.example.momocinema.AppComponent.detailRating
 import com.example.momocinema.AppComponent.expandableText
 import com.example.momocinema.AppComponent.firstInfo
@@ -133,10 +134,12 @@ fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKI
             }
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
             // comments
-//            TODO: Loc list comment cua id film
-            val listComment2 =listComment
 //            TODO: Loc list rank cua id
             listCommentOfFilm(averageRank, amountRank, listComment, listRank, listUser)
+            Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
+
+            createNewComment()
+            Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
         }
     }
 }

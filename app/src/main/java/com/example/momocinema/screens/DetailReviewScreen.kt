@@ -50,7 +50,6 @@ fun ReviewsScreen(filmTitle: String, ranking: Ranking, listComment: List<Comment
                         .padding(horizontal = 10.dp)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(text = "Danh sách bài viết", fontWeight = FontWeight(500))
-                        createCommentTextButton(text = "Viết đánh giá")
                     }
                     Divider(thickness = 1.dp, modifier = Modifier.padding(vertical = 10.dp))
                 }
