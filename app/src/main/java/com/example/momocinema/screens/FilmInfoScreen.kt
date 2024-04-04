@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.momocinema.AppComponent.CustomButton
 import com.example.momocinema.AppComponent.CustomTopAppBar
 import com.example.momocinema.AppComponent.castInfo
+import com.example.momocinema.AppComponent.createNewComment
 import com.example.momocinema.AppComponent.detailRating
 import com.example.momocinema.AppComponent.expandableText
 import com.example.momocinema.AppComponent.firstInfo
@@ -109,6 +110,10 @@ fun FilmInfo(film: Film) {
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
             // comments
             listCommentOfFilm(ranking = film.ranking, listComment = film.listComment)
+            Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
+
+            createNewComment()
+            Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
         }
     }
 }

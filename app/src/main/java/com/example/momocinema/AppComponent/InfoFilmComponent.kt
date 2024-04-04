@@ -16,12 +16,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
@@ -46,6 +51,9 @@ import com.example.momocinema.model.Cast
 import com.example.momocinema.model.Comment
 import com.example.momocinema.model.Film
 import com.example.momocinema.model.Ranking
+import com.example.momocinema.model.User
+
+val focusRequester = FocusRequester()
 
 @Composable
 fun firstInfo(film: Film) {
@@ -260,7 +268,7 @@ fun createCommentTextButton(text: String) {
         text = text,
         fontWeight = FontWeight(500),
         color = Color(0xFF234EC6),
-        modifier = Modifier.clickable { /* TODO: chuyển sang trang viết đánh giá */ }
+        modifier = Modifier.clickable { focusRequester.requestFocus() }
     )
 }
 
@@ -335,5 +343,64 @@ fun castInfo(cast: Cast) {
         )
         Text(text = cast.name, textAlign = TextAlign.Center, lineHeight = 17.sp)
         Text(text = cast.characterName, textAlign = TextAlign.Center, lineHeight = 17.sp, color = Color(0xFF949494), modifier = Modifier.padding(bottom = 17.dp))
+    }
+}
+
+@Composable
+fun createNewComment(modifier: Modifier = Modifier) {
+    var commentBody by remember {
+        mutableStateOf("")
+    }
+    var selectedStarId by remember {
+        mutableStateOf(0)
+    }
+    Column(modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()
+    ) {
+        val exclamation =  when (selectedStarId) {
+            1,2 -> R.string.star12
+            3,4 -> R.string.star34
+            5,6 -> R.string.star56
+            7,8 -> R.string.star78
+            else -> R.string.star910
+        }
+        OutlinedTextField(
+            value = commentBody,
+            onValueChange = {commentBody = it},
+            placeholder = { Text(text = "Giờ là lúc ngôn từ lên ngôi ✍️")},
+            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+            minLines = 5,
+            shape = RoundedCornerShape(10.dp),
+        )
+        Divider(thickness = 1.dp, color = Color.LightGray, modifier = Modifier.padding(vertical = 10.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            if (selectedStarId != 0) { Text(text = selectedStarId.toString() + "/10 - " + stringResource(id = exclamation), textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 16.sp, modifier = Modifier.fillMaxWidth()) }
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            for (starID in 1..10) {
+                IconButton(onClick = {selectedStarId = starID}, modifier = Modifier.size(35.dp)) {
+                    Icon(imageVector = Icons.Filled.Star, contentDescription = null,
+                        tint = if (starID <= selectedStarId) Color(0xFFF08715) else Color.LightGray, modifier = Modifier.size(35.dp))
+                }
+            }
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Cảm nhận về bộ phim", fontSize = 18.sp, fontWeight = FontWeight(500))
+            IconButton(
+                onClick = {
+                    // hoàn tất comment
+                    val newComment = Comment(
+                        User(name = "tên người dùng hiện tại", username = "username hiện tại" ),
+                        body = commentBody, ranking = selectedStarId)
+                    // TODO: đưa User vào Comment
+                    commentBody = ""
+                    selectedStarId = 0
+                },
+                enabled = (selectedStarId > 0 && commentBody != "")
+            ) {
+                Icon(imageVector = Icons.Outlined.Send, contentDescription = null, tint = if (selectedStarId > 0 && commentBody != "") Color(0xFF234EC6) else Color.Gray, modifier = Modifier.size(27.dp))
+            }
+        }
     }
 }
