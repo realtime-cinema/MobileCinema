@@ -44,7 +44,7 @@ fun PaymentScreen(perform: Perform) {
             .padding(it)
             .verticalScroll(rememberScrollState())
         ) {
-            firstInfo(film = perform.film)
+//            firstInfo(film = perform.film) //TODO:: mo ra lam sau (Giap)
             detailPerform(perform = perform)
             Divider(thickness = 1.dp)
             detailPrice(amountSelectedSeat = 8, seatType = "VIP", seatPrice = 120000)

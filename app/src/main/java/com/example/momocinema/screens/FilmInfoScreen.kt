@@ -41,16 +41,24 @@ import com.example.momocinema.AppComponent.listCommentOfFilm
 import com.example.momocinema.AppComponent.secondInfo
 import com.example.momocinema.R
 import com.example.momocinema.data.Datasource
+import com.example.momocinema.data.DatasourceCloneAPIData
+import com.example.momocinema.model.Comment
 import com.example.momocinema.model.Film
+import com.example.momocinema.repository.COMMENT
+import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.FILM_CAST
+import com.example.momocinema.repository.RANKING
+import com.example.momocinema.repository.TAG
+import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun FilmInfo(film: Film) {
+fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKING>,listUser:List<USER>, navigateToAnotherScreen:()->Unit) {
     var isExpanded by remember {
         mutableStateOf(false)
     }
     Scaffold(
-        topBar = { CustomTopAppBar(text = film.title, onClick = { /* TODO */}) },
+        topBar = { CustomTopAppBar(text = film.title, onClick = {navigateToAnotherScreen()}) },
         bottomBar = { CustomButton(actionText = R.string.buy_button, onClick = {/* TODO */}) }
 
     ) {it ->
@@ -64,7 +72,7 @@ fun FilmInfo(film: Film) {
                 .padding(bottom = 10.dp))   //TODO(Thiện): chuyển qua Video
 
             // thông tin quan trọng của film
-            firstInfo(film = film)
+            firstInfo(film = film, tag)
 
             // ngày khởi chiếu | Thời lượng | Ngôn ngữ
             Row(
@@ -72,7 +80,7 @@ fun FilmInfo(film: Film) {
                     .fillMaxWidth()
                     .padding(top = 10.dp) ,horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                secondInfo(title = R.string.release_date, detail = getStringOfDate(film.releaseDate))
+                secondInfo(title = R.string.release_date, detail = getStringOfDate(film.release_date))
                 Divider(thickness = 1.dp, color = Color(0xFFC8C8C8), modifier = Modifier
                     .height(48.dp)
                     .width(1.dp)
@@ -85,8 +93,24 @@ fun FilmInfo(film: Film) {
                     .offset(y = 5.dp))
                 secondInfo(title = R.string.language, detail = film.language)
             }
+//            Count rank và Tính tb rank
+            var averageRank = 0f
+            var amountRank = 0
+            var listTypeRank = mutableListOf(0,0,0,0,0)
+            listRank.forEach { ranking->
+                if (ranking.dest_id == film.id){
+                    amountRank++
+                    averageRank = (averageRank+ranking.ranking)
+                    if (ranking.ranking==1 || ranking.ranking == 2) listTypeRank[0]++
+                    if (ranking.ranking==3 || ranking.ranking == 4) listTypeRank[1]++
+                    if (ranking.ranking==5 || ranking.ranking == 6) listTypeRank[2]++
+                    if (ranking.ranking==7 || ranking.ranking == 8) listTypeRank[3]++
+                    if (ranking.ranking==9 || ranking.ranking == 10) listTypeRank[4]++
+                }
+            }
+            averageRank = averageRank/amountRank
 
-            detailRating(film.ranking)
+            detailRating(averageRank, amountRank, listTypeRank)
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
 
             // description
@@ -98,25 +122,29 @@ fun FilmInfo(film: Film) {
 
             // cast & Crew
             // phần clickable (hiện các phim mà cast đã tham gia) chưa cần thiết, qua giai đoạn 2 làm sau
+            // Phần này cast chưa được nối với db nên k theer load cast, tạm thời fix trống
             Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 15.dp)) {
                 Text(text = "Đạo diễn & Diễn viên", fontWeight = FontWeight(600), fontSize = 19.sp, modifier = Modifier.padding(bottom = 10.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(film.cast) { cast ->
-                        castInfo(cast = cast)
+                    items(listOf<FILM_CAST>()) { cast ->
+//                        castInfo(cast = cast)             //TODO: Phần này sau nối db sẽ mở ra update sau(GIÁP)
                     }
                 }
             }
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
             // comments
-            listCommentOfFilm(ranking = film.ranking, listComment = film.listComment)
+//            TODO: Loc list comment cua id film
+            val listComment2 =listComment
+//            TODO: Loc list rank cua id
+            listCommentOfFilm(averageRank, amountRank, listComment, listRank, listUser)
         }
     }
 }
 
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun FilmInfoPreview() {
-    MomoCinemaTheme {
-        FilmInfo(Datasource().loadFilms()[0])
-    }
-}
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun FilmInfoPreview() {
+//    MomoCinemaTheme {
+//        FilmInfo(Datasource().loadFilms()[0])
+//    }
+//}

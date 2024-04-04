@@ -56,14 +56,14 @@ fun numberOfReviews(amount: Int, style: TextStyle, modifier: Modifier = Modifier
 }
 
 @Composable
-fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: String, modifier: Modifier = Modifier) {
+fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: String,navigateToAnotherScreen: (film: FILM) -> Unit, modifier: Modifier = Modifier) {
     val alignDetail = if (purposeTitle == "Phim nổi bật") Alignment.CenterHorizontally else Alignment.Start
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .padding(5.dp)
             .size(width = 161.dp, height = 283.dp)
-            .clickable { },                                    // TODO: nhấp vào chuyển sang FilmInfoScreen
+            .clickable { navigateToAnotherScreen(film)},                                    // TODO: nhấp vào chuyển sang FilmInfoScreen
         // anh để hàm clickable trong đây luôn để mỗi lần gọi hàm đỡ phải truyền vào
         horizontalAlignment = alignDetail
     ) {
@@ -145,7 +145,7 @@ fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: S
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CarouselCard(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, pagerState: PagerState, modifier: Modifier = Modifier.fillMaxWidth()) {
+fun CarouselCard(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, pagerState: PagerState,navigateToAnotherScreen: (film: FILM) -> Unit, modifier: Modifier = Modifier.fillMaxWidth()) {
     /*val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm*/
     val listFilm = listFilmViewModel.listFilmSelectStateFake.value.listFilm
     HorizontalPager(
@@ -155,8 +155,9 @@ fun CarouselCard(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, p
         modifier = Modifier.height(350.dp)
     ) {page ->
         filmCard(film = listFilm[page],
-            listFilmViewModel
-            , purposeTitle = purposeTitle,
+            listFilmViewModel,
+            purposeTitle = purposeTitle,
+            navigateToAnotherScreen,
             modifier = Modifier
                 .graphicsLayer {
                     val pageOffset = (
@@ -176,7 +177,7 @@ fun CarouselCard(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, p
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListTrendingNow(listFilmViewModel:SelectFilmViewModel,purposeTitle: String, modifier: Modifier = Modifier.fillMaxWidth()) {
+fun ListTrendingNow(listFilmViewModel:SelectFilmViewModel,purposeTitle: String, navigateToAnotherScreen:(film:FILM)->Unit, modifier: Modifier = Modifier.fillMaxWidth()) {
     /*val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm*/
     val listFilm = listFilmViewModel.listFilmSelectStateFake.value.listFilm
     val pagerState = rememberPagerState(initialPage = 2) {
@@ -191,7 +192,7 @@ fun ListTrendingNow(listFilmViewModel:SelectFilmViewModel,purposeTitle: String, 
             color = Color.Black,
             modifier = modifier.padding(top = 20.dp, start = 15.dp)
         )
-        CarouselCard(listFilmViewModel, purposeTitle = purposeTitle, pagerState = pagerState)
+        CarouselCard(listFilmViewModel, purposeTitle = purposeTitle, pagerState = pagerState, navigateToAnotherScreen)
     }
 }
 
@@ -230,7 +231,7 @@ fun titleListFilm(
 }
 
 @Composable
-fun briefFilmList(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, modifier: Modifier = Modifier) {
+fun briefFilmList(listFilmViewModel: SelectFilmViewModel, purposeTitle: String,navigateToAnotherScreen: (film: FILM) -> Unit, modifier: Modifier = Modifier) {
     /*val listFilm = listFilmViewModel.listFilmSelectState.value.listFilm*/
     val listFilm = listFilmViewModel.listFilmSelectStateFake.value.listFilm
     Column(
@@ -244,7 +245,7 @@ fun briefFilmList(listFilmViewModel: SelectFilmViewModel, purposeTitle: String, 
                 .height(307.dp),
         ) {
             items(listFilm) { film ->
-                filmCard(film = film, listFilmViewModel, purposeTitle)
+                filmCard(film = film, listFilmViewModel, purposeTitle, navigateToAnotherScreen)
             }
         }
     }

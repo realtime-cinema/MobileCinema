@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,15 +47,20 @@ import com.example.momocinema.model.Cast
 import com.example.momocinema.model.Comment
 import com.example.momocinema.model.Film
 import com.example.momocinema.model.Ranking
+import com.example.momocinema.repository.COMMENT
+import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.RANKING
+import com.example.momocinema.repository.TAG
+import com.example.momocinema.repository.USER
 
 @Composable
-fun firstInfo(film: Film) {
+fun firstInfo(film: FILM, tag: TAG) {
     Row(modifier = Modifier.padding(horizontal = 10.dp)) {
 //        Image(painter = painterResource(id = film.picture), contentDescription = null, modifier = Modifier
 //            .width(120.dp)
 //            .height(160.dp)
 //            .clip(shape = RoundedCornerShape(8.dp)))
-        AsyncImage(model = film.pictureUrl, contentDescription = null, modifier = Modifier
+        AsyncImage(model = film.picture_url, contentDescription = null, modifier = Modifier
             .width(120.dp)
             .height(160.dp)
             .clip(shape = RoundedCornerShape(8.dp)))
@@ -71,7 +77,7 @@ fun firstInfo(film: Film) {
                     .padding(top = 3.dp, start = 5.dp)
             )
             Text(
-                text = film.tag,
+                text = tag.tag,
                 fontWeight = FontWeight(450),
                 fontSize = 13.sp,
                 color = Color(0xFF797979),
@@ -83,10 +89,10 @@ fun firstInfo(film: Film) {
                     .padding(top = 5.dp, start = 5.dp, bottom = 5.dp)
             )
             Row {
-                restrictAgeTag(restrictAge = film.restrictAge)
+                restrictAgeTag(restrictAge = film.restrict_age)
                 Text(
                     text = stringResource(
-                        id = when (film.restrictAge) {
+                        id = when (film.restrict_age) {
                             18 -> R.string.over_18
                             16 -> R.string.over_16
                             else -> R.string.all_age
@@ -154,7 +160,7 @@ fun determinateProgress(progress: Float, star: Int) {
 }
 
 @Composable
-fun detailRating(ranking: Ranking) {
+fun detailRating(averageRanking: Float, amountRanking:Int, listTypeRank:List<Int>) {
     Card(
         elevation = CardDefaults.cardElevation(12.dp),
         colors = CardDefaults.cardColors(Color.White),
@@ -171,7 +177,7 @@ fun detailRating(ranking: Ranking) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Absolute.Center) {
                     Icon(imageVector = Icons.Filled.Star, contentDescription = null, tint = Color(0xFFFE8E1D), modifier = Modifier.size(30.dp))
-                    Text(text = ranking.averageRating.toString(), fontSize = 30.sp, fontWeight = FontWeight.Bold, lineHeight = 30.sp)
+                    Text(text = averageRanking.toString(), fontSize = 30.sp, fontWeight = FontWeight.Bold, lineHeight = 30.sp)
                     Text(
                         text = "/10",
                         fontWeight = FontWeight(450),
@@ -185,14 +191,14 @@ fun detailRating(ranking: Ranking) {
                             .align(Alignment.Bottom)
                     )
                 }
-                numberOfReviews(amount = ranking.amount, style = MaterialTheme.typography.labelLarge)
+                numberOfReviews(amount = amountRanking, style = MaterialTheme.typography.labelLarge)
             }
             Column {
-                determinateProgress(progress = (ranking.star910.toFloat() / ranking.amount), star = 9)
-                determinateProgress(progress = (ranking.star78.toFloat() / ranking.amount), star = 7)
-                determinateProgress(progress = (ranking.star56.toFloat() / ranking.amount), star = 5)
-                determinateProgress(progress = (ranking.star34.toFloat() / ranking.amount), star = 3)
-                determinateProgress(progress = (ranking.star12.toFloat() / ranking.amount), star = 1)
+                determinateProgress(progress = (listTypeRank[4].toFloat() / amountRanking), star = 9)
+                determinateProgress(progress = (listTypeRank[3].toFloat() / amountRanking), star = 7)
+                determinateProgress(progress = (listTypeRank[2].toFloat() / amountRanking), star = 5)
+                determinateProgress(progress = (listTypeRank[1].toFloat() / amountRanking), star = 3)
+                determinateProgress(progress = (listTypeRank[0].toFloat() / amountRanking), star = 1)
             }
         }
     }
@@ -210,11 +216,11 @@ fun expandableText(text: String, isExpanded: Boolean, onClick:() -> Unit, modifi
 }
 
 @Composable
-fun filmComment(comment: Comment) {
+fun filmComment(comment: COMMENT, ranking: RANKING, user: USER) { //comment, user, ranking
     var isExpanded by remember {
         mutableStateOf(false)
     }
-    val exclamation = when (comment.ranking) {
+    val exclamation = when (ranking.ranking) {
         1,2 -> R.string.star12
         3,4 -> R.string.star34
         5,6 -> R.string.star56
@@ -226,7 +232,7 @@ fun filmComment(comment: Comment) {
             .fillMaxWidth()
             .height(40.dp)) {
             AsyncImage(
-                model = comment.user.avt_url,
+                model = "https://i.pinimg.com/736x/f1/0f/f7/f10ff70a7155e5ab666bcdd1b45b726d.jpg",
                 contentDescription = null,
                 modifier = Modifier
                     .size(40.dp)
@@ -237,12 +243,12 @@ fun filmComment(comment: Comment) {
                 .padding(start = 5.dp)
                 .fillMaxSize()
             ) {
-                Text(text = comment.user.name, fontWeight = FontWeight(500), fontSize = 13.sp)
+                Text(text = user.name, fontWeight = FontWeight(500), fontSize = 13.sp)
                 Row {
                     Icon(imageVector = Icons.Filled.Star, contentDescription = null, tint = Color(0xFFF08715), modifier = Modifier
                         .padding(end = 2.dp)
                         .size(20.dp))
-                    Text(text = comment.ranking.toString() + "/10 - " + stringResource(exclamation), fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = ranking.ranking.toString() + "/10 - " + stringResource(exclamation), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
         }
@@ -265,7 +271,11 @@ fun createCommentTextButton(text: String) {
 }
 
 @Composable
-fun listCommentOfFilm(ranking: Ranking, listComment: List<Comment>) {
+fun listCommentOfFilm(averageRanking: Float,
+                      amountRanking: Int,
+                      listComment: List<COMMENT>,
+                      listRanking:List<RANKING>,
+                      listUser:List<USER>) { //list comment, list ranking, list user, averageRank, amountRank,
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         Text(text = "Cộng đồng Momo nghĩ gì?", fontWeight = FontWeight(500), modifier = Modifier.padding(top = 10.dp, bottom = 3.dp))
         Row(modifier = Modifier
@@ -284,13 +294,13 @@ fun listCommentOfFilm(ranking: Ranking, listComment: List<Comment>) {
                         .size(30.dp)
                 )
                 Text(
-                    text = ranking.averageRating.toString() + "/10",
+                    text = averageRanking.toString() + "/10",
                     fontSize = 23.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 30.sp
                 )
                 numberOfReviews(
-                    amount = ranking.amount,
+                    amount = amountRanking,
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(bottom = 5.dp)
                 )
@@ -304,14 +314,22 @@ fun listCommentOfFilm(ranking: Ranking, listComment: List<Comment>) {
         ) {
             Column {
                 Divider(thickness = 10.dp, color = Color.White)
-                for(commentID in 0..4) {
-                    filmComment(comment = listComment[commentID])
+                for(comment in listComment) {
+// TODO    xu ly loc ranking nap vao
+                    val ranking = listRanking.find { ranking->
+                        ranking.dest_id == comment.id
+                    }?:RANKING(0, 0, 0)
+// TODO    xu ly loc user nap vao
+                    val user = listUser.find { user->
+                        user.id == comment.user_id
+                    }?:USER(0, "", "", 0)
+                    filmComment(comment = comment, ranking, user)
                 }
                 Row(modifier = Modifier
                     .padding(bottom = 10.dp)
                     .fillMaxWidth()
                     .clickable { /* TODO: qua trang xem tất cả đánh giá*/ }, horizontalArrangement = Arrangement.Center) {
-                    Text(text = "Xem tất cả ${ranking.amount} bài viết",
+                    Text(text = "Xem tất cả ${amountRanking} bài viết",
                         color = Color(0xFF234EC6),
                         fontWeight = FontWeight(500),)
                     Icon(imageVector = Icons.Filled.KeyboardArrowRight, contentDescription = null, tint = Color(0xFF234EC6))

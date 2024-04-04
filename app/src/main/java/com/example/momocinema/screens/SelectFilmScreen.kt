@@ -15,22 +15,24 @@ import com.example.momocinema.AppComponent.ListTrendingNow
 import com.example.momocinema.AppComponent.briefFilmList
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.data.Datasource
+import com.example.momocinema.repository.FILM
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun SelectFilmScreen(listFilmViewModel:SelectFilmViewModel,modifier: Modifier = Modifier, navigateToAnotherScreen:()->Unit) {
+// Khi nào a trở lại làm thanh navigation thì cứ sài datasource của anh nha, đừng quan tâm datasource của em
+fun SelectFilmScreen(listFilmViewModel:SelectFilmViewModel,navigateToAnotherScreen:(film:FILM)->Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
-        ListTrendingNow(listFilmViewModel, purposeTitle = "Phim nổi bật")   //               // TODO: truyền listFilm phù hợp vào
+        ListTrendingNow(listFilmViewModel, purposeTitle = "Phim nổi bật", navigateToAnotherScreen)   //               // TODO: truyền listFilm phù hợp vào
 
         Divider(thickness = 10.dp, color = Color(0xFFEEEEEE))
 
-        briefFilmList(listFilmViewModel, purposeTitle = "Phim hay đang chiếu")               // TODO: truyền listFilm phù hợp vào
+        briefFilmList(listFilmViewModel, purposeTitle = "Phim hay đang chiếu", navigateToAnotherScreen)               // TODO: truyền listFilm phù hợp vào
 
         Divider(thickness = 10.dp, color = Color(0xFFEEEEEE))
 
-        briefFilmList(listFilmViewModel, purposeTitle = "Phim sắp chiếu")                // TODO: truyền listFilm phù hợp vào
+        briefFilmList(listFilmViewModel, purposeTitle = "Phim sắp chiếu", navigateToAnotherScreen)                // TODO: truyền listFilm phù hợp vào
     }
 
 }
