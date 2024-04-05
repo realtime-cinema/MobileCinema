@@ -8,6 +8,7 @@ import com.example.momocinema.APIService.recipeService
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.RANKING
+import com.example.momocinema.repository.TAG
 import kotlinx.coroutines.launch
 
 class SelectFilmViewModel:ViewModel() {
@@ -26,6 +27,7 @@ class SelectFilmViewModel:ViewModel() {
             listFilm = DatasourceCloneAPIData().loadFilms(),
             listFilmHaventPerformed = DatasourceCloneAPIData().loadFilms(),
             listFilmOutstanding = DatasourceCloneAPIData().loadFilms(),
+            listTag = DatasourceCloneAPIData().loadTags(),
             listFilmPerforming = DatasourceCloneAPIData().loadFilms(),
         )
     }
@@ -103,6 +105,7 @@ class SelectFilmViewModel:ViewModel() {
             try {
                 val fetchFilmRespone = recipeService.getListFilm()
                 val fetchRankingRespone = recipeService.getRanking()
+                val fetchTagRespone = recipeService.getTag()
                 _listFilmSelectState.value = _listFilmSelectState.value.copy(
                     loading = false,
                     error  =false,
@@ -110,6 +113,7 @@ class SelectFilmViewModel:ViewModel() {
                     listRanking = fetchRankingRespone.RankingList,
                     listFilmOutstanding = filterListOutstanding(fetchFilmRespone.FilmList),
                     listFilmPerforming = filterListPerforming(fetchFilmRespone.FilmList),
+                    listTag = fetchTagRespone.TagList,
                     listFilmHaventPerformed = filterListHaventPerformed(fetchFilmRespone.FilmList),
                 )
             }catch (e:Exception){
@@ -127,6 +131,7 @@ class SelectFilmViewModel:ViewModel() {
         val listRanking:List<RANKING> = listOf(),
         val listFilmOutstanding:List<FILM> = listOf(),
         val listFilmPerforming:List<FILM> = listOf(),
+        val listTag:List<TAG> = listOf(),
         val listFilmHaventPerformed:List<FILM> = listOf(),
     )
 }

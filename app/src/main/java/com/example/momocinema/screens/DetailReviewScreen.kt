@@ -45,7 +45,7 @@ fun ReviewsScreen(filmTitle: String, ranking: Ranking, listComment: List<Comment
                 Column(modifier = Modifier.background(Color(0xFFF7F7F7))) {
                     Divider(thickness = 1.dp, modifier = Modifier.padding(bottom = 10.dp))
                     Text(text = "Tổng quan đánh giá", fontWeight = FontWeight(500), modifier = Modifier.padding(start = 10.dp))
-                    detailRating(ranking)
+//                    detailRating(ranking)
                     Row(modifier = Modifier
                         .padding(horizontal = 10.dp)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -55,7 +55,7 @@ fun ReviewsScreen(filmTitle: String, ranking: Ranking, listComment: List<Comment
                 }
             }
             items(listComment) {comment ->
-                filmComment(comment = comment)
+//                filmComment(comment = comment)
             }
         }
     }

@@ -19,6 +19,8 @@ import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.FILM_CAST
 import com.example.momocinema.repository.PERFORM
 import com.example.momocinema.repository.RANKING
+import com.example.momocinema.repository.TAG
+import com.example.momocinema.repository.USER
 import java.sql.Timestamp
 
 class DatasourceCloneAPIData() {
@@ -32,9 +34,22 @@ class DatasourceCloneAPIData() {
             FILM_CAST(5, "Paul Atreides", "An interesting cast"),
         )
     }
+
+    fun loadUser(): List<USER> {
+        return listOf<USER>(
+            USER(1, "Alex Gi1", "alexgi", 1),
+            USER(2, "Alex Gi2", "alexgi", 1),
+            USER(3, "Alex Gi3", "alexgi", 1),
+            USER(4, "Alex Gi4", "alexgi", 1),
+            USER(5, "Alex Gi5", "alexgi", 1),
+            USER(6, "Alex Gi6", "alexgi", 1),
+            USER(7, "Alex Gi7", "alexgi", 1),
+        )
+    }
     fun loadRanking(): List<RANKING> {
         return listOf<RANKING>(
             RANKING(1, 1, 8),
+            RANKING(8, 1, 9),
             RANKING(2, 2, 6),
             RANKING(3, 3, 7),
             RANKING(4, 4, 9),
@@ -46,10 +61,21 @@ class DatasourceCloneAPIData() {
     fun loadFilms(): List<FILM> {
         return listOf<FILM>(
             FILM(1, "Dune: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau Khai Phong", "Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
-            FILM(2, "Dune: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau Khai Phong", "Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
-            FILM(3, "Dune: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau Khai Phong", "Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
-            FILM(4, "Dune: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau Khai Phong", "Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
-            FILM(5, "Dune: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau Khai Phong", "Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
+            FILM(2, "Damn: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau ", "2Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
+            FILM(3, "Du: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Chau Khai ", "3Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
+            FILM(4, "Did: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","Toi", "4Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
+            FILM(5, "Done: Hành tinh cát - Phần Hai Hành Tinh Cát Phần hai Hành thinh","You", "5Hãy theo dõi hành trình thần thoại của Paul Atreides khi anh đoàn kết với Chani và Fremen trong khi trên con đường trả thù những kẻ âm mưu phá hoại gia đình anh. Đứng trước sự lựa chọn giữa tình yêu của đời mình và số phận của vũ trụ đã biết, Paul cố gắng ngăn chặn một tương lai khủng khiếp mà chỉ có anh mới có thể nhìn thấy", "https://cinema.momocdn.net/img/12744539559079075-2wDBg6JcjhoWyw3LCy2k4XMHOBV.jpg", "", Timestamp.valueOf("2024-03-15 00:00:00.0"), "Phụ đề Lồng Tiếng", 16, 124),
+        )
+    }
+    fun loadTags(): List<TAG> {
+        return listOf<TAG>(
+            TAG(1, "Kinh dị, Tình dục"),
+            TAG(2, "Kinh dị, Tình dục"),
+            TAG(3, "Kinh dị, Tình dục"),
+            TAG(4, "Kinh dị, Tình dục"),
+            TAG(5, "Kinh dị, Tình dục"),
+            TAG(6, "Kinh dị, Tình dục"),
+            TAG(7, "Kinh dị, Tình dục"),
         )
     }
 
@@ -106,7 +132,7 @@ class DatasourceCloneAPIData() {
                     "K hay như các phần trước\n" +
                     "Tiết tấu nhẹ nhàng\n" +
                     "Đoạn kết hơi nhanh"),
-            COMMENT(1, 1, 1, "Rạp khá vắng, nghe mn đánh giá phim ko hay, mạch phim nhanh. Công tâm mà nói thì hơi nhanh thiệt, nhất là lúc đánh bại Tắc kè hoa (nv hùng mạnh nhất vì hút linh hồn 7749 vị ở Cõi linh hồn) và nội tâm nv Cáo Trân thay đổi lẹ ghê. Coi giải trí ok"),
+            COMMENT(1, 2, 1, "Rạp khá vắng, nghe mn đánh giá phim ko hay, mạch phim nhanh. Công tâm mà nói thì hơi nhanh thiệt, nhất là lúc đánh bại Tắc kè hoa (nv hùng mạnh nhất vì hút linh hồn 7749 vị ở Cõi linh hồn) và nội tâm nv Cáo Trân thay đổi lẹ ghê. Coi giải trí ok"),
             COMMENT(2, 2, 2, "Phải nói sao nhỉ. Về cốt truyện, đây là một cách dẫn dắt ổn. Cốt truyện đơn giản, dễ hiểu. Phù hợp với đoạn kết của phần 3. Các tình tiết trong câu chuyện hợp lý. Những cú plot tuy không quá bất ngờ nhưng ổn áp. Những pha tấu hài hợp lý, hay. Tuy nhiên so với các phần phim trước, nó thụt lùi. \n" +
                     "Phản diện: so với 3 phần trước, phản diện của phần này được xây dựng rất mạnh cả về năng lực lẫn quyền lực, và đáng lẽ với cái profile ấy, chúng ta nên có một phản diện tàn ác, mưu mẹo và đáng sợ hơn. Tuy nhiên, bản thân mình không có cảm giác áp lực đến tuyệt vọng như những phần phim trước, phản diện không thật sự mạnh nhưng tự tin lại có thừa. Có thể mình hơi khó tính nhưng nếu bản thân mình là phản diện, mình còn có nhiều trò hay ho hơn để làm khổ Po.\n" +
                     "Chính diện: ở phần trước, Po đã luyện được đến cảnh giới \"tiên hiệp\", sử dụng thuần thục khí, và đánh bại Kai với sức mạnh áp đảo tuyệt đối. Nhưng sức mạnh ấy không còn rõ ràng ở phần này nữa. Đến độ mình nghĩ rằng cậu ấy phải mất hơn 70% sức mạnh so với phần trước vậy. \n" +
