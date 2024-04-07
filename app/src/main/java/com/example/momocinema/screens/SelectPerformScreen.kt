@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,20 +26,22 @@ import com.example.momocinema.data.Datasource
 import com.example.momocinema.model.Cinema
 import com.example.momocinema.model.Film
 import com.example.momocinema.ui.theme.MomoCinemaTheme
+import java.sql.Date
 import java.sql.Timestamp
 import java.time.Instant
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SelectPerformScreen(film: Film) {
-    val currentTime = Timestamp.from(Instant.now())    // lấy thời gian hiện tại (date + time)
-
+    var selectedDate = Timestamp.from(Instant.now())
+    var selectedCinema: Cinema
     Scaffold(
         topBar = {
             Column {
                 CustomTopAppBar(text = film.title, onClick = { /* TODO */})
                 Divider(thickness = 10.dp, color = Color.White)
-                selectDate(currentTime = currentTime)
+                selectedDate = selectDate()
+                // trả về Timestamp cho bộ lọc, nếu khác ngày hiện tại sẽ set thời gian 00:00
             }
         }
     ) {it ->
@@ -48,8 +51,8 @@ fun SelectPerformScreen(film: Film) {
         ) {
             Divider(thickness = 10.dp, color = Color.LightGray, modifier = Modifier.padding( bottom = 10.dp))
 
-            listCinema(listCinema = Datasource().loadCinemas())         // TODO: truyền listCinema thích hợp
-                                                                   // bởi vì film có thể dc hãng này chiếu nhưng hãng kia ko chiếu
+            selectedCinema = listCinema(listCinema = Datasource().loadCinemas())         // TODO: truyền listCinema thích hợp
+            // trả về tên rạp cho bộ lọc                                         // bởi vì film có thể dc hãng này chiếu nhưng hãng kia ko chiếu
             Divider(thickness = 10.dp, color = Color.LightGray)
 
             var expandedCinemaId by remember { mutableStateOf(0) }
@@ -57,7 +60,13 @@ fun SelectPerformScreen(film: Film) {
 
             Column {
                 for (cinemaId in 0..listCinemas.size-1) {
-                    detailCinema(listPerform = Datasource().loadPerforms(), cinema = listCinemas[cinemaId], isExpanded = (cinemaId == expandedCinemaId),  onExpandedButtonClick = {expandedCinemaId = cinemaId})
+                    detailCinema(
+                        listPerform = Datasource().loadPerforms(),
+                        cinema = listCinemas[cinemaId],
+                        isExpanded = (cinemaId == expandedCinemaId),
+                        onExpandedButtonClick = {expandedCinemaId = cinemaId},
+                        selectedDate
+                    )
                     // TODO: listPerform sẽ từ List<Perform> của Film
                 }
             }

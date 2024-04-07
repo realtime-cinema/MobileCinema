@@ -71,13 +71,13 @@ class Datasource() {
 
     fun loadPerforms(): List<Perform> {
         return listOf<Perform>(
-            Perform(loadSeats(), film =  listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0"), cinemaRoom = loadCinemaRooms()[0]),
-            Perform(loadSeats(), listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:30:00.0"), cinemaRoom = loadCinemaRooms()[1]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 11:30:00.0"), cinemaRoom = loadCinemaRooms()[2]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 13:00:00.0"), cinemaRoom = loadCinemaRooms()[3]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 15:30:00.0"), cinemaRoom = loadCinemaRooms()[4]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 17:00:00.0"), cinemaRoom = loadCinemaRooms()[5]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 17:30:00.0"), cinemaRoom = loadCinemaRooms()[6]),
+            Perform(loadSeats(), film =  listFilm[0], startTime = Timestamp.valueOf("2024-04-07 09:00:00.0"), cinemaRoom = loadCinemaRooms()[0]),
+            Perform(loadSeats(), listFilm[0], startTime = Timestamp.valueOf("2024-04-08 09:30:00.0"), cinemaRoom = loadCinemaRooms()[1]),
+            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 11:30:00.0"), cinemaRoom = loadCinemaRooms()[2]),
+            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 23:00:00.0"), cinemaRoom = loadCinemaRooms()[3]),
+            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 19:30:00.0"), cinemaRoom = loadCinemaRooms()[4]),
+            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 17:00:00.0"), cinemaRoom = loadCinemaRooms()[5]),
+            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 17:30:00.0"), cinemaRoom = loadCinemaRooms()[6]),
         )
     }
 

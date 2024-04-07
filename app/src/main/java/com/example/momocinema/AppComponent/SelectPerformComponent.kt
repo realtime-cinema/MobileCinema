@@ -1,5 +1,7 @@
 package com.example.momocinema.AppComponent
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -37,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
@@ -44,6 +47,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momocinema.model.Cinema
 import com.example.momocinema.model.Perform
+import java.sql.Timestamp
+import java.time.Instant
 import java.util.Calendar
 import java.util.Date
 
@@ -86,8 +91,10 @@ fun DayCard(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun selectDate(currentTime: Date) {
+fun selectDate(): Date {
+    val currentTime = Timestamp.from(Instant.now())  // lấy thời gian hiện tại (date + time)
     val currentDate = currentTime.date
     val currentDay = currentTime.day
     val numberOfDayOfCurrentMonth = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH) + 1
@@ -109,25 +116,27 @@ fun selectDate(currentTime: Date) {
             //CustomCard(day = (currentDay + i + newMonth) % dayOfCurrentMonth, dayNames[(currentDayOfWeek+i) % 7], isSelect, { isSelect = !isSelect})
         }
     }
+    if (selectedCardId == 0) return Timestamp(currentTime.time)
+    return Timestamp(currentTime.time + selectedCardId*24*60*60*1000 - currentTime.hours*60*60*1000 - currentTime.minutes*60*1000)
 }
 
 
 @Composable
 fun LogoCinema(cinema: Cinema, color: Color = Color.Gray) {
-    AsyncImage(model = cinema.logoUrl, contentDescription = null, modifier = Modifier
+    AsyncImage(model = cinema.logoUrl, contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier
         .size(50.dp)
         .border(width = 2.dp, color = color, RoundedCornerShape(8.dp)))
 }
 
 @Composable
-fun listCinema(listCinema: List<Cinema>) {
+fun listCinema(listCinema: List<Cinema>): Cinema {
+    var selectedCinemaLogoId by remember { mutableStateOf(0) }
     Row(verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .height(95.dp)
             .horizontalScroll(rememberScrollState())
     ) {
-        var selectedCinemaLogoId by remember { mutableStateOf(0) }
         for(cinemaId in 0..7) {
             val isSelected = (selectedCinemaLogoId == cinemaId)
             val selectedColor = if(isSelected) Color(0xFF234EC6) else Color.Gray
@@ -143,6 +152,7 @@ fun listCinema(listCinema: List<Cinema>) {
             }
         }
     }
+    return listCinema[selectedCinemaLogoId]
 }
 
 @Composable
@@ -167,7 +177,7 @@ fun Showtime(perform: Perform, onClick:() -> Unit) {
 }
 
 @Composable
-fun detailCinema(listPerform: List<Perform>, cinema: Cinema, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier) {
+fun detailCinema(listPerform: List<Perform>, cinema: Cinema, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, seletedDate: Date) {
     val extraPadding by animateDpAsState(               // cho phần mở rộng, thu hẹp Showtime
         targetValue = if (isExpanded) 20.dp else 0.dp,
         animationSpec = spring(
@@ -194,14 +204,16 @@ fun detailCinema(listPerform: List<Perform>, cinema: Cinema, isExpanded: Boolean
         }
         if (isExpanded) Column(Modifier.padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
             Text(text = "2D Phụ đề" /* TODO: truyền viewType, translateType */, fontSize = 17.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 5.dp, start = 3.dp))
+
+            var availablePerform = listPerform.filter { perform -> perform.startTime.after(seletedDate) }
             LazyVerticalGrid(columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(255.dp)
+                    .height((80 + 87*(if (availablePerform.size % 3 == 0) availablePerform.size/3 - 1 else  availablePerform.size/3)).dp)
             ) {
-                items(listPerform) {item   ->
+                items(availablePerform) {item   ->
                     Showtime(perform = item, onClick = { /* TODO: chuyển sang trang chọn ghế */})
                 }
             }
