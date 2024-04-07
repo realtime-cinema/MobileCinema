@@ -67,7 +67,7 @@ fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKI
     var listTypeRank = mutableListOf(0,0,0,0,0)
     Scaffold(
         topBar = { CustomTopAppBar(text = film.title, onClick = {navigateToAnotherScreen(ScreenName.SelectFilmScreen.route, averageRank, amountRank, listTypeRank)}) },
-        bottomBar = { CustomButton(actionText = R.string.buy_button, onClick = {/* TODO */}) }
+        bottomBar = { CustomButton(actionText = R.string.buy_button, onClick = {navigateToAnotherScreen(ScreenName.SelectPerformScreen.route, averageRank, amountRank, listTypeRank)}) }
 
     ) {it ->
         Column(modifier = Modifier

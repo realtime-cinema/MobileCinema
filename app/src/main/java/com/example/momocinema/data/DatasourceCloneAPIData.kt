@@ -86,7 +86,7 @@ class DatasourceCloneAPIData() {
             CINEMA_ROOM(3, 3, 3, 3, "ROOM3"),
             CINEMA_ROOM(4, 4, 4, 4, "ROOM4"),
             CINEMA_ROOM(5, 5, 5, 5, "ROOM5"),
-            CINEMA_ROOM(6, 6, 6, 6, "ROOM6"),
+            CINEMA_ROOM(6, 2, 6, 6, "ROOM6"),
             CINEMA_ROOM(7, 7, 7, 7, "ROOM7"),
         )
     }
@@ -116,7 +116,7 @@ class DatasourceCloneAPIData() {
             PERFORM(3, 3, 3, 3, 3, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
             PERFORM(4, 4, 4, 4, 4, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
             PERFORM(5, 5, 5, 5, 5, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
-            PERFORM(6, 6, 6, 6, 6, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
+            PERFORM(6, 5, 6, 6, 6, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
             PERFORM(7, 7, 7, 7, 7, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
 
         )
