@@ -63,6 +63,9 @@ class Datasource() {
             Cinema(name = "Cinemax", variant = "Đà Nẵng", logoUrl = "https://homepage.momocdn.net/cinema/momo-upload-api-221108100132-638034984925107129.png")
         )
     }
+    fun loadCinemasName(): List<String> {
+        return listOf<String>("CGV", "Lotte", "Galaxy", "BHD", "Cinestar", "MegaGS", "DCine", "Beta", "Cinemax")
+    }
 
     fun loadSeats(): List<SeatPrice> {
         return (1..13).flatMap { x -> (1..9).map { y -> SeatPrice(x = x, y = y, type = if (y > 3) "VIP" else "DEFAULT", price = if (y>3) 120000 else 100000) }}
