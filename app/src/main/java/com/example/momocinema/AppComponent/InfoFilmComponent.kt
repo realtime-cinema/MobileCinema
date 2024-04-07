@@ -1,5 +1,6 @@
 package com.example.momocinema.AppComponent
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.model.Cast
 import com.example.momocinema.model.Comment
 import com.example.momocinema.model.Film
@@ -280,9 +282,12 @@ fun createCommentTextButton(text: String) {
 @Composable
 fun listCommentOfFilm(averageRanking: Float,
                       amountRanking: Int,
+                      listTypeRank:MutableList<Int>,
                       listComment: List<COMMENT>,
                       listRanking:List<RANKING>,
-                      listUser:List<USER>) { //list comment, list ranking, list user, averageRank, amountRank,
+                      listUser:List<USER>,
+                      film:FILM,
+                      navigateToAnotherScreen:(nameScreen:String, averageRank:Float, amountRank:Int, listTypeRank:MutableList<Int>)->Unit) { //list comment, list ranking, list user, averageRank, amountRank,
     Column(modifier = Modifier.padding(horizontal = 10.dp)) {
         Text(text = "Cộng đồng Momo nghĩ gì?", fontWeight = FontWeight(500), modifier = Modifier.padding(top = 10.dp, bottom = 3.dp))
         Row(modifier = Modifier
@@ -322,20 +327,22 @@ fun listCommentOfFilm(averageRanking: Float,
             Column {
                 Divider(thickness = 10.dp, color = Color.White)
                 for(comment in listComment) {
-// TODO    xu ly loc ranking nap vao
-                    val ranking = listRanking.find { ranking->
-                        ranking.dest_id == comment.id
-                    }?:RANKING(0, 0, 0)
-// TODO    xu ly loc user nap vao
                     val user = listUser.find { user->
                         user.id == comment.user_id
                     }?:USER(0, "", "", 0)
+
+// TODO    xu ly loc ranking nap vao
+                    val ranking = listRanking.find { ranking->
+                        ranking.from_id == user.id && ranking.dest_id == film.id
+                    }?:RANKING(0, 0, 0, 0, "")
+// TODO    xu ly loc user nap vao
+
                     filmComment(comment = comment, ranking, user)
                 }
                 Row(modifier = Modifier
                     .padding(bottom = 10.dp)
                     .fillMaxWidth()
-                    .clickable { /* TODO: qua trang xem tất cả đánh giá*/ }, horizontalArrangement = Arrangement.Center) {
+                    .clickable { navigateToAnotherScreen(ScreenName.DetailReviewScreen.route, averageRanking, amountRanking, listTypeRank) }, horizontalArrangement = Arrangement.Center) {
                     Text(text = "Xem tất cả ${amountRanking} bài viết",
                         color = Color(0xFF234EC6),
                         fontWeight = FontWeight(500),)

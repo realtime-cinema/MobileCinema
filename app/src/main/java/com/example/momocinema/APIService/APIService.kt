@@ -1,7 +1,10 @@
 package com.example.momocinema.APIService
 
+import com.example.momocinema.repository.CinemaRespone
+import com.example.momocinema.repository.CinemaRoomRespone
 import com.example.momocinema.repository.CommentRespone
 import com.example.momocinema.repository.FilmRespone
+import com.example.momocinema.repository.PerformRespone
 import com.example.momocinema.repository.RankingRespone
 import com.example.momocinema.repository.TagRespone
 import com.example.momocinema.repository.UserRespone
@@ -27,4 +30,10 @@ interface APIService{
     suspend fun getComment():CommentRespone
     @GET("") //user
     suspend fun getUser():UserRespone
+    @GET("") //perform
+    suspend fun getPerform():PerformRespone
+    @GET("") //cinema room
+    suspend fun getCinemaRoom():CinemaRoomRespone
+    @GET("") //cinema
+    suspend fun getCinema():CinemaRespone
 }

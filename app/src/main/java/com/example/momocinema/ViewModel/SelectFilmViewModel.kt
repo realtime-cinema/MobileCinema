@@ -84,11 +84,14 @@ class SelectFilmViewModel:ViewModel() {
     }
     fun averageRankOfFilm(listRank:List<RANKING>, film:FILM):Float{
         var average:Float = 0.0f
+        var total = 0;
         for (item in listRank){
-            if (item.id == film.id){
-                average = (average+item.ranking.toInt())/2
+            if (item.dest_id == film.id){
+                total++;
+                average = average+item.ranking
             }
         }
+        average = if (total == 0) 0.0f else average/total
         return average
     }
     fun totalRankOfFilm(listRank:List<RANKING>, film:FILM):Int{

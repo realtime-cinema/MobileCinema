@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -43,10 +45,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momocinema.model.Cinema
 import com.example.momocinema.model.Perform
+import com.example.momocinema.repository.CINEMA
+import com.example.momocinema.repository.PERFORM
 import java.sql.Timestamp
 import java.time.Instant
 import java.util.Calendar
@@ -129,26 +134,27 @@ fun LogoCinema(cinema: Cinema, color: Color = Color.Gray) {
 }
 
 @Composable
-fun listCinema(listCinema: List<Cinema>): Cinema {
+//fun listCinema(listCinema: List<String>): Cinema {
+fun listCinema(listCinema: List<String>): String {
     var selectedCinemaLogoId by remember { mutableStateOf(0) }
     Row(verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .height(95.dp)
+            .height(60.dp)
             .horizontalScroll(rememberScrollState())
     ) {
-        for(cinemaId in 0..7) {
+        var listCinemaAfterFilter:MutableList<CINEMA> = mutableListOf()
+        for(cinemaId in 0..listCinema.size-1) {
             val isSelected = (selectedCinemaLogoId == cinemaId)
             val selectedColor = if(isSelected) Color(0xFF234EC6) else Color.Gray
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(horizontal = 3.dp)
-                    .size(70.dp, 75.dp)
+                    .size(70.dp, 30.dp)
                     .clickable { selectedCinemaLogoId = cinemaId }
             ) {
-                LogoCinema(cinema = listCinema[cinemaId], color = selectedColor)
-                Text(text = listCinema[cinemaId].name, fontSize = 13.sp, color = selectedColor, fontWeight = if(isSelected) FontWeight.Bold else null, modifier = Modifier.padding(top = 3.dp))
+                Text(text = listCinema[cinemaId], fontSize = 18.sp, color = selectedColor, fontWeight = if(isSelected) FontWeight.Bold else null, modifier = Modifier.padding(top = 3.dp))
             }
         }
     }
@@ -156,7 +162,7 @@ fun listCinema(listCinema: List<Cinema>): Cinema {
 }
 
 @Composable
-fun Showtime(perform: Perform, onClick:() -> Unit) {
+fun Showtime(perform: PERFORM, onClick:() -> Unit) {
     Card(border = BorderStroke(1.dp, Color.LightGray), colors = CardDefaults.cardColors(Color.White),
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 7.dp)
@@ -167,8 +173,8 @@ fun Showtime(perform: Perform, onClick:() -> Unit) {
             modifier = Modifier.size(132.dp, 72.dp)
         ) {
             Row(verticalAlignment = Alignment.Bottom) {
-                Text(text = getStringOfTime(perform.startTime), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Text(text = " ~ ${getStringOfTime(perform.endTime)}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(bottom = 2.dp))
+                Text(text = getStringOfTime(perform.start_time), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(text = " ~ ${getStringOfTime(perform.end_time)}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(bottom = 2.dp))
             }
             Text(text = "139/139 Ghế", fontSize = 15.sp, color = Color.Gray)
             // TODO: "139/139 ghế" này a ko biết lấy dữ liệu sao
@@ -177,7 +183,7 @@ fun Showtime(perform: Perform, onClick:() -> Unit) {
 }
 
 @Composable
-fun detailCinema(listPerform: List<Perform>, cinema: Cinema, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, seletedDate: Date) {
+fun detailCinema(listPerform: List<PERFORM>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date) {
     val extraPadding by animateDpAsState(               // cho phần mở rộng, thu hẹp Showtime
         targetValue = if (isExpanded) 20.dp else 0.dp,
         animationSpec = spring(
@@ -192,7 +198,6 @@ fun detailCinema(listPerform: List<Perform>, cinema: Cinema, isExpanded: Boolean
             .padding(vertical = 10.dp, horizontal = 3.dp)
             .fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                LogoCinema(cinema = cinema)
                 Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start = 10.dp)) {
                     Text(text = "${cinema.name} ${cinema.variant}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     Text(text = cinema.variant, fontSize = 14.sp, color = Color.Gray)
@@ -205,13 +210,14 @@ fun detailCinema(listPerform: List<Perform>, cinema: Cinema, isExpanded: Boolean
         if (isExpanded) Column(Modifier.padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
             Text(text = "2D Phụ đề" /* TODO: truyền viewType, translateType */, fontSize = 17.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 5.dp, start = 3.dp))
 
-            var availablePerform = listPerform.filter { perform -> perform.startTime.after(seletedDate) }
+            var availablePerform = listPerform.filter { perform -> perform.start_time.after(seletedDate) }
             LazyVerticalGrid(columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height((80 + 87*(if (availablePerform.size % 3 == 0) availablePerform.size/3 - 1 else  availablePerform.size/3)).dp)
+                    // tính tón height theo số lượng Perform
             ) {
                 items(availablePerform) {item   ->
                     Showtime(perform = item, onClick = { /* TODO: chuyển sang trang chọn ghế */})

@@ -215,18 +215,7 @@ fun titleListFilm(
             color = Color.Black,
         )
 
-        Row(modifier = Modifier                     // "Xem tất cả >"
-            .clickable {  }                         // TODO cần chuyển sang trang có đầy đủ phim hơn "Xem tất cả    >"
-        ) {
-            Text(
-                text = "Xem tất cả",
-                fontWeight = FontWeight(600),
-                lineHeight = 1.25.sp,
-                fontSize = 18.sp,
-                color = Color.Black,
-            )
-            Icon(imageVector = Icons.Filled.KeyboardArrowRight, contentDescription = null)
-        }
+
     }
 }
 

@@ -48,14 +48,14 @@ class DatasourceCloneAPIData() {
     }
     fun loadRanking(): List<RANKING> {
         return listOf<RANKING>(
-            RANKING(1, 1, 8),
-            RANKING(8, 1, 9),
-            RANKING(2, 2, 6),
-            RANKING(3, 3, 7),
-            RANKING(4, 4, 9),
-            RANKING(5, 5, 10),
-            RANKING(6, 6, 8),
-            RANKING(7, 7, 5),
+            RANKING(1, 1, 8, 8, ""),
+            RANKING(8, 1, 9, 9, ""),
+            RANKING(2, 5, 5, 7, ""),
+            RANKING(3, 3, 7, 5, ""),
+            RANKING(4, 4, 9, 6, ""),
+            RANKING(5, 5, 10, 2, ""),
+            RANKING(6, 1, 1, 4, ""),
+            RANKING(7, 2, 1, 8, ""),
         )
     }
     fun loadFilms(): List<FILM> {
@@ -86,7 +86,7 @@ class DatasourceCloneAPIData() {
             CINEMA_ROOM(3, 3, 3, 3, "ROOM3"),
             CINEMA_ROOM(4, 4, 4, 4, "ROOM4"),
             CINEMA_ROOM(5, 5, 5, 5, "ROOM5"),
-            CINEMA_ROOM(6, 6, 6, 6, "ROOM6"),
+            CINEMA_ROOM(6, 2, 6, 6, "ROOM6"),
             CINEMA_ROOM(7, 7, 7, 7, "ROOM7"),
         )
     }
@@ -116,7 +116,7 @@ class DatasourceCloneAPIData() {
             PERFORM(3, 3, 3, 3, 3, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
             PERFORM(4, 4, 4, 4, 4, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
             PERFORM(5, 5, 5, 5, 5, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
-            PERFORM(6, 6, 6, 6, 6, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
+            PERFORM(6, 5, 6, 6, 6, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
             PERFORM(7, 7, 7, 7, 7, 45000,Timestamp.valueOf("2024-03-23 09:30:00.0"), Timestamp.valueOf("2024-03-23 10:30:00.0")),
 
         )
