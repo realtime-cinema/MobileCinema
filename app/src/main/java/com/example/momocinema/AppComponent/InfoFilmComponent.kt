@@ -419,7 +419,6 @@ fun createNewComment(modifier: Modifier = Modifier) {
                         body = commentBody, ranking = selectedStarId)
                     // TODO: đưa User vào Comment
                     commentBody = ""
-                    selectedStarId = 0
                 },
                 enabled = (selectedStarId > 0 && commentBody != "")
             ) {
