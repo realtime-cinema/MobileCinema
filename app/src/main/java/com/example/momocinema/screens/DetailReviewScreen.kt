@@ -22,20 +22,26 @@ import com.example.momocinema.AppComponent.CustomTopAppBar
 import com.example.momocinema.AppComponent.createCommentTextButton
 import com.example.momocinema.AppComponent.detailRating
 import com.example.momocinema.AppComponent.filmComment
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.model.Comment
 import com.example.momocinema.model.Ranking
+import com.example.momocinema.repository.COMMENT
+import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.RANKING
+import com.example.momocinema.repository.TAG
+import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun ReviewsScreen(filmTitle: String, ranking: Ranking, listComment: List<Comment>) {
+fun ReviewsScreen(film:FILM, listRank:List<RANKING>, listComment: List<COMMENT>, listUser:List<USER>, averageRank:Float, amountRank:Int, listTypeRank:MutableList<Int>, filmTag:TAG, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
     Scaffold(
         topBar = {
             Column {
-                CustomTopAppBar(text = "Đánh giá", onClick = { /* TODO: trở về trang FilmInfoScreen*/ })
+                CustomTopAppBar(text = "Đánh giá", onClick = { navigateToAnotherScreen(ScreenName.FilmInfoScreen.route, film) })
                 Row(modifier = Modifier.padding(7.dp)) {
                     Text(text = "Đánh giá của ", fontSize = 13.sp)
-                    Text(text = filmTitle, fontSize = 13.sp, color = Color(0xFF234EC6), fontWeight = FontWeight(500))
+                    Text(text = film.title, fontSize = 13.sp, color = Color(0xFF234EC6), fontWeight = FontWeight(500))
                 }
             }
         }
@@ -45,7 +51,7 @@ fun ReviewsScreen(filmTitle: String, ranking: Ranking, listComment: List<Comment
                 Column(modifier = Modifier.background(Color(0xFFF7F7F7))) {
                     Divider(thickness = 1.dp, modifier = Modifier.padding(bottom = 10.dp))
                     Text(text = "Tổng quan đánh giá", fontWeight = FontWeight(500), modifier = Modifier.padding(start = 10.dp))
-//                    detailRating(ranking)
+                    detailRating(averageRank, amountRank, listTypeRank)
                     Row(modifier = Modifier
                         .padding(horizontal = 10.dp)
                         .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -55,20 +61,28 @@ fun ReviewsScreen(filmTitle: String, ranking: Ranking, listComment: List<Comment
                 }
             }
             items(listComment) {comment ->
-//                filmComment(comment = comment)
+                val user = listUser.find { user->
+                    user.id == comment.user_id
+                }?:USER(0, "", "", 0)
+
+// TODO    xu ly loc ranking nap vao
+                val ranking = listRank.find { ranking->
+                    ranking.from_id == user.id && ranking.dest_id == film.id
+                }?:RANKING(0, 0, 0, 0, "")
+                filmComment(comment = comment, ranking = ranking, user = user)
             }
         }
     }
 }
 
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun ReviewsPreview() {
-    MomoCinemaTheme {
-        ReviewsScreen(
-            filmTitle = "Godzilla x Kong: Đế chế mới",
-            ranking = Ranking(averageRating = 9.3f, amount = 2200, star12 = 100, star34 = 100, star56 = 500, star78 = 600, star910 = 900),
-            listComment = Datasource().loadComments()
-        )
-    }
-}
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun ReviewsPreview() {
+//    MomoCinemaTheme {
+//        ReviewsScreen(
+//            filmTitle = "Godzilla x Kong: Đế chế mới",
+//            ranking = Ranking(averageRating = 9.3f, amount = 2200, star12 = 100, star34 = 100, star56 = 500, star78 = 600, star910 = 900),
+//            listComment = Datasource().loadComments()
+//        )
+//    }
+//}

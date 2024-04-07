@@ -1,5 +1,6 @@
 package com.example.momocinema.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import com.example.momocinema.AppComponent.getStringOfDate
 import com.example.momocinema.AppComponent.listCommentOfFilm
 import com.example.momocinema.AppComponent.secondInfo
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.model.Comment
@@ -53,13 +55,18 @@ import com.example.momocinema.repository.TAG
 import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
+
+
 @Composable
-fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKING>,listUser:List<USER>, navigateToAnotherScreen:()->Unit) {
+fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKING>,listUser:List<USER>, navigateToAnotherScreen:(nameScreen:String, averageRank:Float, amountRank:Int, listTypeRank:MutableList<Int>)->Unit) {
     var isExpanded by remember {
         mutableStateOf(false)
     }
+    var averageRank = 0f
+    var amountRank = listComment.size
+    var listTypeRank = mutableListOf(0,0,0,0,0)
     Scaffold(
-        topBar = { CustomTopAppBar(text = film.title, onClick = {navigateToAnotherScreen()}) },
+        topBar = { CustomTopAppBar(text = film.title, onClick = {navigateToAnotherScreen(ScreenName.SelectFilmScreen.route, averageRank, amountRank, listTypeRank)}) },
         bottomBar = { CustomButton(actionText = R.string.buy_button, onClick = {/* TODO */}) }
 
     ) {it ->
@@ -95,12 +102,10 @@ fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKI
                 secondInfo(title = R.string.language, detail = film.language)
             }
 //            Count rank và Tính tb rank
-            var averageRank = 0f
-            var amountRank = 0
-            var listTypeRank = mutableListOf(0,0,0,0,0)
+
+
             listRank.forEach { ranking->
                 if (ranking.dest_id == film.id){
-                    amountRank++
                     averageRank = (averageRank+ranking.ranking)
                     if (ranking.ranking==1 || ranking.ranking == 2) listTypeRank[0]++
                     if (ranking.ranking==3 || ranking.ranking == 4) listTypeRank[1]++
@@ -108,9 +113,11 @@ fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKI
                     if (ranking.ranking==7 || ranking.ranking == 8) listTypeRank[3]++
                     if (ranking.ranking==9 || ranking.ranking == 10) listTypeRank[4]++
                 }
-            }
-            averageRank = averageRank/amountRank
 
+            }
+            if (amountRank!=0){
+                averageRank = averageRank/amountRank
+            }
             detailRating(averageRank, amountRank, listTypeRank)
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
 
@@ -135,7 +142,7 @@ fun FilmInfo(film: FILM, tag:TAG, listComment:List<COMMENT>, listRank:List<RANKI
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
             // comments
 //            TODO: Loc list rank cua id
-            listCommentOfFilm(averageRank, amountRank, listComment, listRank, listUser)
+            listCommentOfFilm(averageRank, amountRank, listTypeRank, listComment, listRank, listUser, film, navigateToAnotherScreen)
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
 
             createNewComment()

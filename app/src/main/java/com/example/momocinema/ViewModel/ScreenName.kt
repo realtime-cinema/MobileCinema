@@ -7,4 +7,5 @@ sealed class ScreenName(val route:String){
     object SelectSeatScreen:ScreenName("select_seat")
     object LoginScreen:ScreenName("login")
     object RegisterScreen:ScreenName("register")
+    object DetailReviewScreen:ScreenName("detail_review")
 }

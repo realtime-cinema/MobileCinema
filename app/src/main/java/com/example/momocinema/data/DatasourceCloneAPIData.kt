@@ -48,14 +48,14 @@ class DatasourceCloneAPIData() {
     }
     fun loadRanking(): List<RANKING> {
         return listOf<RANKING>(
-            RANKING(1, 1, 8),
-            RANKING(8, 1, 9),
-            RANKING(2, 2, 6),
-            RANKING(3, 3, 7),
-            RANKING(4, 4, 9),
-            RANKING(5, 5, 10),
-            RANKING(6, 6, 8),
-            RANKING(7, 7, 5),
+            RANKING(1, 1, 8, 8, ""),
+            RANKING(8, 1, 9, 9, ""),
+            RANKING(2, 5, 5, 7, ""),
+            RANKING(3, 3, 7, 5, ""),
+            RANKING(4, 4, 9, 6, ""),
+            RANKING(5, 5, 10, 2, ""),
+            RANKING(6, 1, 1, 4, ""),
+            RANKING(7, 2, 1, 8, ""),
         )
     }
     fun loadFilms(): List<FILM> {
