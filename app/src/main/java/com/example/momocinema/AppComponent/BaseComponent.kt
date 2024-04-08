@@ -140,7 +140,7 @@ fun BottomNavigationBar() {
     var selectedItemIndex by remember {
         mutableStateOf(0)
     }
-    NavigationBar {
+    NavigationBar(containerColor = Color.White) {
         bottomNavigationItems.forEachIndexed { index, bottomNavigationItem ->
             NavigationBarItem(
                 selected = selectedItemIndex == index,

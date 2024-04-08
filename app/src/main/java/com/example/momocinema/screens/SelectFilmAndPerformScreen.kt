@@ -97,7 +97,7 @@ fun SelectCinemaTab() {
             .background(color = Color(0xFFEBEBEB))
         ) {
             Text(text = "Danh sách phim", fontSize = 23.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(10.dp))
-            Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(horizontal = 10.dp)) {
+            Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)) {
                 LazyColumn() {
                     items(DatasourceCloneAPIData().loadFilms()) { film ->
                         FilmAndPerform(film = film, listPerform = DatasourceCloneAPIData().loadPerforms(), selectedDate = selectedDate)
@@ -111,7 +111,7 @@ fun SelectCinemaTab() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, apiLevel = 33)
 @Composable
-fun GreetingPreview() {
+fun SelectCinemaTabPreview() {
     MomoCinemaTheme {
         SelectCinemaTab()
     }
