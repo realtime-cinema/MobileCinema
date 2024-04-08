@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.momocinema.AppComponent.BottomNavigationBar
 import com.example.momocinema.AppComponent.FilmAndPerform
 import com.example.momocinema.AppComponent.listCinema
 import com.example.momocinema.AppComponent.selectDate
@@ -72,7 +73,7 @@ fun SelectCinemaTab() {
                 ) {
                     Text(text = "Rạp " + selectedCinema, fontWeight = FontWeight.Bold, fontSize = 23.sp)
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { /* TODO(Thiện) */ },
                         shape = RoundedCornerShape(5.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp),
                         colors = ButtonDefaults.buttonColors(Color(0xFFAACFFF))
@@ -88,7 +89,8 @@ fun SelectCinemaTab() {
                     }
                 }
             }
-        }
+        },
+        bottomBar = { BottomNavigationBar() }
     ) {it ->
         Column(modifier = Modifier
             .padding(it)

@@ -5,6 +5,7 @@
     restrictAge: nhãn giới hạn độ tuổi
     getStringOfTime: chuyển từ startTime, endTime của suất chiếu sang String
     dayNames: tên của các ngày trong tuần
+    BottomNavigationBar
  */
 package com.example.momocinema.AppComponent
 
@@ -14,6 +15,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,19 +27,28 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.momocinema.R
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -112,3 +123,35 @@ fun restrictAgeTag(restrictAge: Int, modifier: Modifier = Modifier) {
         textAlign = TextAlign.Center
     )
 }           // tag 18+ 13+ 16 +P
+
+data class BottomNavigationItem(
+    val title: String,
+    val selectedIcon: Int,
+    val unselectedIcon: Int
+)
+
+@Composable
+fun BottomNavigationBar() {
+    val bottomNavigationItems = listOf(
+        BottomNavigationItem(title = "Chọn phim", selectedIcon = R.drawable.filledticket, unselectedIcon = R.drawable.outlineticket),
+        BottomNavigationItem(title = "Chọn rạp", selectedIcon = R.drawable.filledcinema, unselectedIcon = R.drawable.outlinecinema),
+        BottomNavigationItem(title = "Tôi", selectedIcon = R.drawable.filledperson, unselectedIcon = R.drawable.outlineperson)
+    )
+    var selectedItemIndex by remember {
+        mutableStateOf(0)
+    }
+    NavigationBar {
+        bottomNavigationItems.forEachIndexed { index, bottomNavigationItem ->
+            NavigationBarItem(
+                selected = selectedItemIndex == index,
+                onClick = {
+                    selectedItemIndex = index
+                    // TODO: Navigation
+                },
+                label = { Text(text = bottomNavigationItem.title, fontSize = 13.sp, fontWeight = FontWeight(500), color = if (selectedItemIndex == index) Color(0xFF234EC6) else Color.Gray) },
+                icon = {
+                    Icon(painter = painterResource(id = if (selectedItemIndex == index) bottomNavigationItem.selectedIcon else bottomNavigationItem.unselectedIcon), contentDescription = null, tint = if (selectedItemIndex == index) Color(0xFF234EC6) else Color.Gray, modifier = Modifier.size(25.dp))
+                })
+        }
+    }
+}
