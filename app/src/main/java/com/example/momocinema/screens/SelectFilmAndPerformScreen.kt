@@ -18,12 +18,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,20 +37,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.momocinema.AppComponent.BottomNavigationBar
 import com.example.momocinema.AppComponent.FilmAndPerform
+import com.example.momocinema.AppComponent.SelectVariantSheet
 import com.example.momocinema.AppComponent.listCinema
 import com.example.momocinema.AppComponent.selectDate
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.ui.theme.MomoCinemaTheme
+import kotlinx.coroutines.launch
 import java.sql.Timestamp
 import java.time.Instant
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SelectCinemaTab() {
     var selectedVariant by remember {
         mutableStateOf("TP.HCM")
     }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
     var selectedDate by remember {
         mutableStateOf(Timestamp.from(Instant.now()))
     }
@@ -61,8 +69,14 @@ fun SelectCinemaTab() {
                 .background(color = Color(0xFFEBEBEB))
                 .padding(start = 10.dp, end = 10.dp, top = 10.dp)
             ) {
-                Card(colors = CardDefaults.cardColors(Color.White)) {
+                Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(bottom = 10.dp)) {
                     selectedCinema = listCinema(listCinema = Datasource().loadCinemasName())
+                }
+                Card(colors = CardDefaults.cardColors(Color.White) ) {
+                    Column {
+                        Divider(thickness = 15.dp, color = Color.White)
+                        selectedDate = selectDate()
+                    }
                 }
                 Row(
                     modifier = Modifier
@@ -71,9 +85,9 @@ fun SelectCinemaTab() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Rạp " + selectedCinema, fontWeight = FontWeight.Bold, fontSize = 23.sp)
+                    Text(text = "Danh sách phim", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(10.dp))
                     Button(
-                        onClick = { /* TODO(Thiện) */ },
+                        onClick = { showBottomSheet = true },
                         shape = RoundedCornerShape(5.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp),
                         colors = ButtonDefaults.buttonColors(Color(0xFFAACFFF))
@@ -81,14 +95,9 @@ fun SelectCinemaTab() {
                         Text(text = selectedVariant, color = Color(0xFF234EC6))
                     }
                 }
-
-                Card(colors = CardDefaults.cardColors(Color.White) ) {
-                    Column {
-                        Divider(thickness = 15.dp, color = Color.White)
-                        selectedDate = selectDate()
-                    }
-                }
             }
+            if (showBottomSheet)
+                selectedVariant = SelectVariantSheet(closeBottomSheet = { showBottomSheet = false }, selectedVariant)
         },
         bottomBar = { BottomNavigationBar() }
     ) {it ->
@@ -96,7 +105,6 @@ fun SelectCinemaTab() {
             .padding(it)
             .background(color = Color(0xFFEBEBEB))
         ) {
-            Text(text = "Danh sách phim", fontSize = 23.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(10.dp))
             Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)) {
                 LazyColumn() {
                     items(DatasourceCloneAPIData().loadFilms()) { film ->

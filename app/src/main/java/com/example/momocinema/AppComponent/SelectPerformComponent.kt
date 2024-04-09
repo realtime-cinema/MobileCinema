@@ -21,24 +21,34 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
 import androidx.compose.material.icons.sharp.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +67,7 @@ import com.example.momocinema.model.Perform
 import com.example.momocinema.repository.CINEMA
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.PERFORM
+import kotlinx.coroutines.launch
 import java.sql.Timestamp
 import java.time.Instant
 import java.util.Calendar
@@ -175,13 +186,13 @@ fun Showtime(perform: PERFORM, onClick:() -> Unit) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.size(132.dp, 72.dp)
+            modifier = Modifier.size(132.dp, 52.dp)
         ) {
             Row(verticalAlignment = Alignment.Bottom) {
-                Text(text = getStringOfTime(perform.start_time), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                Text(text = " ~ ${getStringOfTime(perform.end_time)}", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(bottom = 2.dp))
+                Text(text = getStringOfTime(perform.start_time), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = " ~ ${getStringOfTime(perform.end_time)}", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(bottom = 2.dp))
             }
-            Text(text = "139/139 Ghế", fontSize = 15.sp, color = Color.Gray)
+            Text(text = "139/139 Ghế", fontSize = 12.sp, color = Color.Gray)
             // TODO: "139/139 ghế" này a ko biết lấy dữ liệu sao
         }
     }
@@ -238,7 +249,7 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(text = film.title,
                 fontWeight = FontWeight(600),
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = Color.Black,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -246,7 +257,7 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
             )
             Column(modifier = Modifier.weight(0.25f), horizontalAlignment = Alignment.End) {
                 Text(text = "Chi tiết", fontSize = 14.sp, fontWeight = FontWeight(500), color = Color(0xFF234EC6), modifier = Modifier
-                    .clickable { }
+                    .clickable { /* TODO: Thiện*/}
                 )
                 restrictAgeTag(restrictAge = film.restrict_age)
             }
@@ -266,7 +277,7 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
                     verticalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 80.dp, max = 167.dp)
+                        .heightIn(min = 60.dp, max = 127.dp)
                     // tính tón height theo số lượng Perform
                 ) {
                     items(availablePerform) {item   ->
@@ -275,6 +286,44 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
                 }
             }
         }
-        Divider(thickness = 1.dp )
+        Divider(thickness = 1.dp, modifier = Modifier.padding(top = 10.dp) )
     }
+}
+val variants = listOf(
+    "TP.HCM", "Hà Nội", "Đà Nẵng", "An Giang", "Vũng Tàu", "Bạc Liêu", "Bắc Giang", "Bắc Kạn", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Huế", "Tiền Giang", "Tuyên Quang", "Vĩnh Long", "Yên Bái"
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectVariantSheet(closeBottomSheet:() -> Unit, selectedVariant: String): String {
+    var selectedVariant by remember {
+        mutableStateOf(selectedVariant)
+    }
+    val sheetState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = closeBottomSheet,
+        sheetState = sheetState
+    ) {
+        LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)) {
+            items(variants) {variant ->
+                Divider(thickness = 1.dp)
+                Row(modifier = Modifier
+                    .clickable {
+                        selectedVariant = variant
+                    }
+                    .padding(vertical = 10.dp)
+                    .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row {
+                        Icon(imageVector = Icons.Outlined.LocationOn, contentDescription = null, tint = Color(0xFF234EC6))
+                        Text(text = variant, fontWeight = FontWeight(500))
+                    }
+                    if (selectedVariant == variant)
+                        Icon(imageVector = Icons.Filled.Check, contentDescription = null, tint = Color(0xFF234EC6))
+                }
+            }
+        }
+    }
+    return selectedVariant
 }
