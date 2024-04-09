@@ -232,8 +232,7 @@ fun detailCinema(listPerform: List<PERFORM>, cinema: CINEMA, isExpanded: Boolean
                 verticalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 10.dp, max = 255.dp)
-                    // tính tón height theo số lượng Perform
+                    .heightIn(min = 60.dp, max = 127.dp)
             ) {
                 items(availablePerform) {item   ->
                     Showtime(perform = item, onClick = { /* TODO: chuyển sang trang chọn ghế */})

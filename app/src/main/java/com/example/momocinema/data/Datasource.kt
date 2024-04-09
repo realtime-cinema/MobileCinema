@@ -38,15 +38,15 @@ class Datasource() {
 
     fun loadCinemaRooms(): List<CinemaRoom> {
         return listOf<CinemaRoom>(
-            CinemaRoom(type = 1, name =  "ROOM1", cinemaLayout =  CinemaLayout(11,9), cinema = loadCinemas()[0]),
-            CinemaRoom(type = 1, name =  "ROOM2", cinemaLayout =  CinemaLayout(11,9), cinema = loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM3", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM4", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM5", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM6", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM7", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM8", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0]) ,
-            CinemaRoom(type = 1, name =  "ROOM9", cinemaLayout =  CinemaLayout(11,9), cinema = this.loadCinemas()[0])
+            CinemaRoom(type = 1, name =  "ROOM1", cinemaLayout =  CinemaLayout(13,9), cinema = loadCinemas()[0]),
+            CinemaRoom(type = 1, name =  "ROOM2", cinemaLayout =  CinemaLayout(13,9), cinema = loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM3", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM4", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM5", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM6", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM7", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM8", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0]) ,
+            CinemaRoom(type = 1, name =  "ROOM9", cinemaLayout =  CinemaLayout(13,9), cinema = this.loadCinemas()[0])
         )
     }
 

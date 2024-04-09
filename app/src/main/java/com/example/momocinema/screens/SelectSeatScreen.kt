@@ -1,22 +1,29 @@
 package com.example.momocinema.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,14 +53,15 @@ fun SelectSeatScreen(perform: Perform) {
                 CustomTopAppBar(
                     text = perform.cinemaRoom.cinema.name + " " + perform.cinemaRoom.cinema.variant,
                     onClick = { /* TODO: trở về SelectPerformScreen */ })
-                Image(painter = painterResource(id = R.drawable.screen_in_cinema), contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxWidth())
             } },
         bottomBar = {
             Column {
                 Divider(thickness = 1.dp, modifier = Modifier.padding(top = 7.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp).fillMaxWidth()
+                    modifier = Modifier
+                        .padding(vertical = 5.dp, horizontal = 10.dp)
+                        .fillMaxWidth()
                 ) {
                     SeatStatus(text = R.string.selectedSeat, color = Color.LightGray)
                     SeatStatus(text = R.string.selectingSeat, color = Color(0xFF234EC6))
@@ -71,22 +79,39 @@ fun SelectSeatScreen(perform: Perform) {
         Column(modifier = Modifier
             .padding(it)
         ) {
-            LazyHorizontalGrid(
-                rows = GridCells.Fixed(cinemaLayoutMaxY),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.size(width = (cinemaLayoutMaxX * 35).dp, height = (cinemaLayoutMaxY * 35).dp)
-            ){
-                items(perform.listSeat) {seat->
-                    Seat(seat = seat,
-                        availableSeat = true,   // ghế đã có ng đặt hay chưa
-                        selectingSeat = isSelected[(seat.y-1) * cinemaLayoutMaxX + seat.x].value,
-                        // TODO: e ko muốn đưa state vào thì chỉnh selectingSeat
-                        // chỗ này bị bug khi chạy trên device anh cũng chả biết fix sao:vv
-                        onClick = {     //TODO hàm khi chọn ghế, chỉ cho phép chọn tối đa 8 ghế
-                            isSelected[(seat.y-1) * cinemaLayoutMaxX + seat.x].value = !isSelected[(seat.y-1) * cinemaLayoutMaxX + seat.x].value
-                        }
+            val configuration = LocalConfiguration.current
+            val screenWidth = configuration.screenWidthDp
+
+                // đúng vs trường hop x > 9
+            Column(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState(initial = (cinemaLayoutMaxX / 2) * 20))
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Image(painter = painterResource(id = R.drawable.screen_in_cinema), contentDescription = null, contentScale = ContentScale.Fit, modifier = Modifier
+                    .width(screenWidth.dp)
+                    .height(53.dp)
+                    .align(Alignment.CenterHorizontally))
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(cinemaLayoutMaxY),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    userScrollEnabled = false,
+                    modifier = Modifier.size(
+                        width = (cinemaLayoutMaxX * 36).dp,
+                        height = (cinemaLayoutMaxY * 36).dp
                     )
+                ) {
+                    items(perform.listSeat) { seat ->
+                        Seat(seat = seat,
+                            availableSeat = true,   // ghế đã có ng đặt hay chưa
+                            selectingSeat = isSelected[(seat.y - 1) * cinemaLayoutMaxX + seat.x].value,
+                            onClick = {     //TODO hàm khi chọn ghế, chỉ cho phép chọn tối đa 8 ghế
+                                isSelected[(seat.y - 1) * cinemaLayoutMaxX + seat.x].value =
+                                    !isSelected[(seat.y - 1) * cinemaLayoutMaxX + seat.x].value
+                            }
+                        )
+                    }
                 }
             }
         }
