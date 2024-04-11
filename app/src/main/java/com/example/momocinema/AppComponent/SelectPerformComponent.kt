@@ -63,8 +63,10 @@ import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momocinema.model.Cinema
+import com.example.momocinema.model.CinemaRoom
 import com.example.momocinema.model.Perform
 import com.example.momocinema.repository.CINEMA
+import com.example.momocinema.repository.CINEMA_ROOM
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.PERFORM
 import kotlinx.coroutines.launch
@@ -152,7 +154,7 @@ fun LogoCinema(cinema: Cinema, color: Color = Color.Gray) {
 @Composable
 //fun listCinema(listCinema: List<String>): Cinema {
 fun listCinema(listCinema: List<String>): String {
-    var selectedCinemaLogoId by remember { mutableStateOf(0) }
+    var selectedCinemaLogoId by remember { mutableStateOf(-1) }
     Row(verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
@@ -174,7 +176,11 @@ fun listCinema(listCinema: List<String>): String {
             }
         }
     }
-    return listCinema[selectedCinemaLogoId]
+    if (selectedCinemaLogoId != -1){
+        return listCinema[selectedCinemaLogoId]
+    } else{
+        return "ALL"
+    }
 }
 
 @Composable
@@ -199,7 +205,7 @@ fun Showtime(perform: PERFORM, onClick:() -> Unit) {
 }
 
 @Composable
-fun detailCinema(listPerform: List<PERFORM>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date) {
+fun detailCinema(listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, listCINEMA: List<CINEMA>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date) {
     val extraPadding by animateDpAsState(               // cho phần mở rộng, thu hẹp Showtime
         targetValue = if (isExpanded) 20.dp else 0.dp,
         animationSpec = spring(
@@ -225,8 +231,17 @@ fun detailCinema(listPerform: List<PERFORM>, cinema: CINEMA, isExpanded: Boolean
         }
         if (isExpanded) Column(Modifier.padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
             Text(text = "2D Phụ đề" /* TODO: truyền viewType, translateType */, fontSize = 17.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 5.dp, start = 3.dp))
-
-            var availablePerform = listPerform.filter { perform -> perform.start_time.after(seletedDate) }
+//          avaiablePerform phải là list đã lọc theo tên rạp, thời gian chiếu
+            var availablePerform = listPerform.filter { perform->
+                var cinemaRoomOfPerform = listCinemaRoom. find { cinemaRoom ->
+                    perform.dest_id == cinemaRoom.id
+                }?: CINEMA_ROOM(-1, -1, -1, -1, "")
+                var CinemaOfPerform = listCINEMA.find {cinema->
+                    cinema.id ==cinemaRoomOfPerform.cinema_id
+                }?:CINEMA(-1, "", "")
+                cinema.name == CinemaOfPerform.name
+            }
+            availablePerform = availablePerform.filter { perform -> perform.start_time.after(seletedDate)}
             LazyVerticalGrid(columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.SpaceEvenly,
