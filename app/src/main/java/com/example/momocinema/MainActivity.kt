@@ -39,6 +39,10 @@ import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.navigation.CinemaTicketApp
 import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.PERFORM
+import com.example.momocinema.screens.FilmInfo
+import com.example.momocinema.screens.SelectFilmScreen
+import com.example.momocinema.screens.SelectSeatScreen
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 class MainActivity : ComponentActivity() {
