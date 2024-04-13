@@ -92,7 +92,7 @@ fun filmCard(film: FILM, listFilmViewModel: SelectFilmViewModel, purposeTitle: S
         ) {
             if (purposeTitle == "Phim sắp chiếu")
                 Text(
-                    text = film.release_date.toString(),
+                    text = getStringOfDate(film.release_date),
                     fontWeight = FontWeight(600),
                     lineHeight = 1.25.sp,
                     fontSize = 13.sp,

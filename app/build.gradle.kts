@@ -84,4 +84,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     // Load image from URL
     implementation("io.coil-kt:coil-compose:2.6.0")
+    // load video from youtube url
+    implementation( "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.28")
 }

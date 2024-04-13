@@ -244,6 +244,7 @@ fun detailCinema(listPerform: List<PERFORM>, cinema: CINEMA, isExpanded: Boolean
 
 @Composable
 fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.util.Date) {
+    var showInfoSheet by remember { mutableStateOf(false) }
     Column(modifier = Modifier.padding(10.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(text = film.title,
@@ -256,7 +257,7 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
             )
             Column(modifier = Modifier.weight(0.25f), horizontalAlignment = Alignment.End) {
                 Text(text = "Chi tiết", fontSize = 14.sp, fontWeight = FontWeight(500), color = Color(0xFF234EC6), modifier = Modifier
-                    .clickable { /* TODO: Thiện*/}
+                    .clickable { showInfoSheet = !showInfoSheet}
                 )
                 restrictAgeTag(restrictAge = film.restrict_age)
             }
@@ -286,6 +287,8 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
             }
         }
         Divider(thickness = 1.dp, modifier = Modifier.padding(top = 10.dp) )
+        if (showInfoSheet)
+            FilmInfoSheet(film = film, {showInfoSheet = !showInfoSheet})
     }
 }
 val variants = listOf(

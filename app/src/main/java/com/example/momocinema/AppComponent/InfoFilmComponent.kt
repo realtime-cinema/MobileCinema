@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,12 +23,15 @@ import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +45,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import com.example.momocinema.R
 import com.example.momocinema.ViewModel.ScreenName
@@ -57,9 +64,14 @@ import com.example.momocinema.model.Ranking
 import com.example.momocinema.model.User
 import com.example.momocinema.repository.COMMENT
 import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.FILM_CAST
 import com.example.momocinema.repository.RANKING
 import com.example.momocinema.repository.TAG
 import com.example.momocinema.repository.USER
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+
 val focusRequester = FocusRequester()
 
 @Composable
@@ -342,7 +354,14 @@ fun listCommentOfFilm(averageRanking: Float,
                 Row(modifier = Modifier
                     .padding(bottom = 10.dp)
                     .fillMaxWidth()
-                    .clickable { navigateToAnotherScreen(ScreenName.DetailReviewScreen.route, averageRanking, amountRanking, listTypeRank) }, horizontalArrangement = Arrangement.Center) {
+                    .clickable {
+                        navigateToAnotherScreen(
+                            ScreenName.DetailReviewScreen.route,
+                            averageRanking,
+                            amountRanking,
+                            listTypeRank
+                        )
+                    }, horizontalArrangement = Arrangement.Center) {
                     Text(text = "Xem tất cả ${amountRanking} bài viết",
                         color = Color(0xFF234EC6),
                         fontWeight = FontWeight(500),)
@@ -393,7 +412,9 @@ fun createNewComment(modifier: Modifier = Modifier) {
             value = commentBody,
             onValueChange = {commentBody = it},
             placeholder = { Text(text = "Giờ là lúc ngôn từ lên ngôi ✍️")},
-            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
             minLines = 5,
             shape = RoundedCornerShape(10.dp),
         )
@@ -425,5 +446,64 @@ fun createNewComment(modifier: Modifier = Modifier) {
                 Icon(imageVector = Icons.Outlined.Send, contentDescription = null, tint = if (selectedStarId > 0 && commentBody != "") Color(0xFF234EC6) else Color.Gray, modifier = Modifier.size(27.dp))
             }
         }
+    }
+}
+
+@Composable
+fun TrailerFromUrl(videoUrl: String, modifier: Modifier = Modifier) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    AndroidView(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(5.dp)),
+        factory = {context->
+            YouTubePlayerView(context = context).apply {
+                lifecycleOwner.lifecycle.addObserver(this)
+                addYouTubePlayerListener(object: AbstractYouTubePlayerListener(){
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.loadVideo(videoUrl, 0f)
+                    }
+                })
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilmInfoSheet(film: FILM, closeBottomSheet:() -> Unit) {
+    val sheetState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = closeBottomSheet,
+        sheetState = sheetState,
+        dragHandle = { Text(text = "Thông tin phim", fontWeight = FontWeight(500), modifier = Modifier.padding(top = 10.dp))},
+        containerColor = Color(0xFFEBEBEB)
+    ) {
+        Card(modifier = Modifier.padding(10.dp), colors = CardDefaults.cardColors(Color.White)) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                TrailerFromUrl(videoUrl = film.trailer_url)
+                Divider(thickness = 10.dp, color = Color.White)
+                Text(text = film.title, fontWeight = FontWeight(500), fontSize = 16.sp)
+                Text(text = "TODO: film.list<tag>", fontSize = 13.sp)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(painter = painterResource(id = R.drawable.timer), contentDescription = null, modifier = Modifier.size(20.dp))
+                        Text(text = "${film.duration}'", fontSize = 13.sp, modifier = Modifier.padding(end = 10.dp))
+                    }
+                    restrictAgeTag(restrictAge = film.restrict_age)
+                }
+                Divider(thickness = 1.dp, modifier = Modifier.padding(vertical = 10.dp))
+                Text(text = "Mô tả", fontSize = 14.sp, fontWeight = FontWeight(500))
+                Text(text = film.description, fontSize = 12.sp)
+                Divider(thickness = 1.dp, modifier = Modifier.padding(vertical = 10.dp))
+                Text(text = "Đạo diễn & Diễn viên", fontWeight = FontWeight(600), fontSize = 14.sp, modifier = Modifier.padding(bottom = 10.dp))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(listOf<FILM_CAST>()) { cast ->
+//                        castInfo(cast = cast)             //TODO: Phần này sau nối db sẽ mở ra update sau(GIÁP)
+                    }
+                }
+            }
+        }
+
     }
 }
