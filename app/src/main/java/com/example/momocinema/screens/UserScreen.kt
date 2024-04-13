@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.momocinema.AppComponent.BottomNavigationBar
 import com.example.momocinema.AppComponent.DefaultBody
+import com.example.momocinema.AppComponent.PurchasedFilms
 import com.example.momocinema.AppComponent.UserMetric
 import com.example.momocinema.R
 import com.example.momocinema.data.DatasourceCloneAPIData
@@ -46,7 +47,7 @@ import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
 fun UserScreen(user: USER) {
-    val listFilmWatched: List<FILM> = listOf()
+    val listPurchasedFilm: List<FILM> = DatasourceCloneAPIData().loadFilms()
 
     Scaffold(
         topBar = {
@@ -98,17 +99,14 @@ fun UserScreen(user: USER) {
         ) {
             Card(modifier = Modifier
                 .padding(10.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize(),
                 colors = CardDefaults.cardColors(Color.White)
             ) {
-                if (listFilmWatched.size == 0) {
+                if (listPurchasedFilm.size == 0) {
                     DefaultBody()
                 }
                 else {
-                    LazyColumn() {
-                        // TODO(Thiện)
-                    }
+                    PurchasedFilms(purchasedFilms = listPurchasedFilm)
                 }
             }
         }

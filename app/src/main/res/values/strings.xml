@@ -31,6 +31,7 @@
     <string name = "continue_button">Tiếp tục</string>
     <string name = "change_perform">Đổi suất</string>
     <string name = "pay_button">Thanh toán</string>
+    <string name = "cross_sell">Mua thêm</string>
 
     // detailRestrictAge
     <string name = "all_age">Phim được phép phổ biến đến người xem ở mọi độ tuổi</string>
