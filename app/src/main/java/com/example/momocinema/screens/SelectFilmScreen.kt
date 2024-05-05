@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.momocinema.AppComponent.BottomNavigationBar
 import com.example.momocinema.AppComponent.ListTrendingNow
 import com.example.momocinema.AppComponent.briefFilmList
+import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.repository.FILM
@@ -26,11 +27,12 @@ import com.example.momocinema.ui.theme.MomoCinemaTheme
 @Composable
 
 fun SelectFilmScreen(
+    mainViewModel: MainViewModel,
     selectFilmViewModel: SelectFilmViewModel,
     navigateToAnotherScreen:(film:FILM)->Unit,
     modifier: Modifier = Modifier) {
     Scaffold(
-        bottomBar = { BottomNavigationBar() }
+        bottomBar = { BottomNavigationBar(mainViewModel) }
     ) {
         Column(
             modifier = modifier

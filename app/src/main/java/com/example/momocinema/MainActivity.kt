@@ -39,9 +39,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.momocinema.AppComponent.restrictAgeTag
 import com.example.momocinema.AppComponent.selectDate
 import com.example.momocinema.ViewModel.FilmInfoViewModel
+import com.example.momocinema.ViewModel.LoginViewModel
+import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
 import com.example.momocinema.ViewModelFactory.FilmInfoViewModelFactory
+import com.example.momocinema.ViewModelFactory.LoginViewModelFactory
+import com.example.momocinema.ViewModelFactory.MainViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectPerformViewModelFactory
 import com.example.momocinema.data.Datasource
@@ -60,6 +64,12 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val mainViewModelFactory = MainViewModelFactory()
+        val mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
+
+        val loginViewModelFactory = LoginViewModelFactory()
+        val loginViewModel = ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
+
         val selectFilmViewModelFactory = SelectFilmViewModelFactory()
         val selectFilmViewModel = ViewModelProvider(this, selectFilmViewModelFactory)[SelectFilmViewModel::class.java]
         selectFilmViewModel.fetchListFilm()
@@ -79,6 +89,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     CinemaTicketApp(
                         navControler = navController,
+                        mainViewModel,
+                        loginViewModel,
                         selectFilmViewModel,
                         filmInfoViewModel,
                         selectPerformViewModel
@@ -90,7 +102,6 @@ class MainActivity : ComponentActivity() {
     }
 
 
-val listFilm = Datasource().loadFilms()
 
 
 
@@ -99,23 +110,23 @@ val listFilm = Datasource().loadFilms()
 
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun GreetingPreview() {
-    MomoCinemaTheme {
-        //LogoCinema(Cinema("Cinestar", "Đồng Nai", "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170453-637584230934981809.png"))
-        // selectDay()
-        //listCinema(Datasource().loadCinemas())
-        //detailCinema(cinema = Cinema("Cinestar", "Đồng Nai", "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170453-637584230934981809.png"), isExpanded = isExpanded, {isExpanded = !isExpanded})
-        //Showtime(perform = Perform(listFilm[0], startTime = "17:20") )
-        //SelectSeatScreen(perform = Perform(Datasource().loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0")),cinema = Cinema(cinemaRooms = listOf<CinemaRoom>(CinemaRoom(1, "ROOM6", CinemaLayout(13,9))) ,"Cinestar", "Đồng Nai", "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170453-637584230934981809.png"))
-        //InfoPerform( perform = Perform(listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0")))
-        //Seat(seat = SeatPrice(13,9, 100000, "DEFAULT"), availableSeat = true, )
-        //PaymentScreen(perform = Datasource().loadPerforms()[0])
-        //filmComment(Datasource().loadComments()[0])
-        //listCommentOfFilm(ranking = Ranking(averageRating = 9.3f, amount = 2200, star12 = 100, star34 = 100, star56 = 500, star78 = 600, star910 = 900), listComment = Datasource().loadComments())
-        //ReviewsScreen(filmTitle = "Godzilla x Kong: Đế chế mới", ranking = Ranking(averageRating = 9.3f, amount = 2200, star12 = 100, star34 = 100, star56 = 500, star78 = 600, star910 = 900), listComment = Datasource().loadComments())
-        //createNewComment()
-    }
-}
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun GreetingPreview() {
+//    MomoCinemaTheme {
+//        //LogoCinema(Cinema("Cinestar", "Đồng Nai", "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170453-637584230934981809.png"))
+//        // selectDay()
+//        //listCinema(Datasource().loadCinemas())
+//        //detailCinema(cinema = Cinema("Cinestar", "Đồng Nai", "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170453-637584230934981809.png"), isExpanded = isExpanded, {isExpanded = !isExpanded})
+//        //Showtime(perform = Perform(listFilm[0], startTime = "17:20") )
+//        //SelectSeatScreen(perform = Perform(Datasource().loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0")),cinema = Cinema(cinemaRooms = listOf<CinemaRoom>(CinemaRoom(1, "ROOM6", CinemaLayout(13,9))) ,"Cinestar", "Đồng Nai", "https://homepage.momocdn.net/blogscontents/momo-upload-api-210604170453-637584230934981809.png"))
+//        //InfoPerform( perform = Perform(listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0")))
+//        //Seat(seat = SeatPrice(13,9, 100000, "DEFAULT"), availableSeat = true, )
+//        //PaymentScreen(perform = Datasource().loadPerforms()[0])
+//        //filmComment(Datasource().loadComments()[0])
+//        //listCommentOfFilm(ranking = Ranking(averageRating = 9.3f, amount = 2200, star12 = 100, star34 = 100, star56 = 500, star78 = 600, star910 = 900), listComment = Datasource().loadComments())
+//        //ReviewsScreen(filmTitle = "Godzilla x Kong: Đế chế mới", ranking = Ranking(averageRating = 9.3f, amount = 2200, star12 = 100, star34 = 100, star56 = 500, star78 = 600, star910 = 900), listComment = Datasource().loadComments())
+//        //createNewComment()
+//    }
+//}

@@ -1,9 +1,11 @@
 package com.example.momocinema.AppComponent
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.repository.FILM
 
 @Composable
@@ -51,15 +55,29 @@ fun UserMetric(image: Int, color: Color, backgroundColor: Color, amount: Int, la
 }
 
 @Composable
-fun DefaultBody() {
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Divider(thickness = 40.dp, color = Color.White)
-        Image(painter = painterResource(id = R.drawable.backgrounduserscreen), contentDescription = null)
-        Divider(thickness = 15.dp, color = Color.White)
-        Button(onClick = { /*TODO*/ }, colors = ButtonDefaults.buttonColors(Color(0xFF234EC6))) {
-            Text(text = "Chọn phim", fontSize = 16.sp)
+fun DefaultBody(mainViewModel: MainViewModel, navigateToAnotherScreen:(screenName:String)->Unit) {
+    if (mainViewModel.applicationState.value.isAuthor){
+        Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Divider(thickness = 40.dp, color = Color.White)
+            Image(painter = painterResource(id = R.drawable.backgrounduserscreen), contentDescription = null)
+            Divider(thickness = 15.dp, color = Color.White)
+            Button(onClick = { mainViewModel.updateAppScreenState(0) }, colors = ButtonDefaults.buttonColors(Color(0xFF234EC6))) {
+                Text(text = "Chọn phim", fontSize = 16.sp)
+            }
+        }
+    }else{
+        Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center) {
+            Button(
+                onClick = { navigateToAnotherScreen(ScreenName.LoginScreen.route) },
+                colors = ButtonDefaults.buttonColors(Color(0xFF234EC6)),
+            ) {
+                Text(text = "Login", fontSize = 16.sp)
+            }
+
         }
     }
+
 }
 
 @Composable

@@ -40,6 +40,7 @@ import com.example.momocinema.AppComponent.FilmAndPerform
 import com.example.momocinema.AppComponent.SelectVariantSheet
 import com.example.momocinema.AppComponent.listCinema
 import com.example.momocinema.AppComponent.selectDate
+import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.ui.theme.MomoCinemaTheme
@@ -50,7 +51,7 @@ import java.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SelectCinemaTab() {
+fun SelectCinemaTab(mainViewModel: MainViewModel) {
     var selectedVariant by remember {
         mutableStateOf("TP.HCM")
     }
@@ -99,7 +100,7 @@ fun SelectCinemaTab() {
             if (showBottomSheet)
                 selectedVariant = SelectVariantSheet(closeBottomSheet = { showBottomSheet = false }, selectedVariant)
         },
-        bottomBar = { BottomNavigationBar() }
+        bottomBar = { BottomNavigationBar(mainViewModel) }
     ) {it ->
         Column(modifier = Modifier
             .padding(it)
@@ -116,11 +117,11 @@ fun SelectCinemaTab() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun SelectCinemaTabPreview() {
-    MomoCinemaTheme {
-        SelectCinemaTab()
-    }
-}
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun SelectCinemaTabPreview() {
+//    MomoCinemaTheme {
+//        SelectCinemaTab()
+//    }
+//}

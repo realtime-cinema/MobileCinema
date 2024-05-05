@@ -7,11 +7,14 @@ import com.example.momocinema.repository.CommentRespone
 import com.example.momocinema.repository.FilmRespone
 import com.example.momocinema.repository.PerformRespone
 import com.example.momocinema.repository.RankingRespone
+import com.example.momocinema.repository.USER
 import com.example.momocinema.repository.UserRespone
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface APIService{
     @GET("api/v1/films?") //listFilm
@@ -20,8 +23,8 @@ interface APIService{
     suspend fun getRanking():RankingRespone
     @GET("") //comment *
     suspend fun getComment():CommentRespone
-    @GET("") //user
-    suspend fun getUser():UserRespone
+    @POST("/api/auth/authenticate") //user
+    suspend fun getUser(@Body user: USER):Response<UserRespone>
     @GET("/api/v1/performs?") //perform
     suspend fun getAllPerform():Response<PerformRespone>
     @GET("/api/v1/rooms") //cinema room

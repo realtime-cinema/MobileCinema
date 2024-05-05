@@ -40,13 +40,14 @@ import com.example.momocinema.AppComponent.DefaultBody
 import com.example.momocinema.AppComponent.PurchasedFilms
 import com.example.momocinema.AppComponent.UserMetric
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun UserScreen(user: USER) {
+fun UserScreen(mainViewModel: MainViewModel,user: USER, navigateToAnotherScreen:(screenName:String)->Unit) {
     val listPurchasedFilm: List<FILM> = listOf()
 
     Scaffold(
@@ -68,16 +69,16 @@ fun UserScreen(user: USER) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Divider(thickness = 42.dp, color = Color.White, modifier = Modifier.padding(top = 10.dp))
-                    Text(text = user.name.toString(), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text(text = if(mainViewModel.applicationState.value.isAuthor)user.firstName.toString()+user.lastName.toString() else "Regular User", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     Row(
                         modifier = Modifier
                             .padding(top = 17.dp)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        UserMetric(image = R.drawable.ticketinuserscreen, color = Color(0xFF234EC6), backgroundColor = Color(0xFFE8F6FF) , amount = 13, label = "Vé đã mua")
-                        UserMetric(image = R.drawable.view, color = Color(0xFF6EB430), backgroundColor = Color(0xFFE9FFC7), amount = 7, label = "Phim đã xem")
-                        UserMetric(image = R.drawable.comment, color = Color(0xFFF1A93A), backgroundColor = Color(0xFFFFFFBF), amount = 5, label = "Bình luận")
+                        UserMetric(image = R.drawable.ticketinuserscreen, color = Color(0xFF234EC6), backgroundColor = Color(0xFFE8F6FF) , amount = 0, label = "Vé đã mua")
+                        UserMetric(image = R.drawable.view, color = Color(0xFF6EB430), backgroundColor = Color(0xFFE9FFC7), amount = 0, label = "Phim đã xem")
+                        UserMetric(image = R.drawable.comment, color = Color(0xFFF1A93A), backgroundColor = Color(0xFFFFFFBF), amount = 0, label = "Bình luận")
                     }
                 }
                 Image(painter = painterResource(id = R.drawable.popcorn), contentScale = ContentScale.Fit, contentDescription = null,
@@ -90,7 +91,7 @@ fun UserScreen(user: USER) {
                         .border(1.dp, color = Color.LightGray, CircleShape))
             }
         },
-        bottomBar = { BottomNavigationBar() }
+        bottomBar = { BottomNavigationBar(mainViewModel) }
     ) {it ->
         Column(modifier = Modifier
             .fillMaxSize()
@@ -103,7 +104,7 @@ fun UserScreen(user: USER) {
                 colors = CardDefaults.cardColors(Color.White)
             ) {
                 if (listPurchasedFilm.size == 0) {
-                    DefaultBody()
+                    DefaultBody(mainViewModel, navigateToAnotherScreen)
                 }
                 else {
                     PurchasedFilms(purchasedFilms = listPurchasedFilm)
@@ -113,10 +114,10 @@ fun UserScreen(user: USER) {
     }
 }
 
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun UserPreview() {
-    MomoCinemaTheme {
-        UserScreen(DatasourceCloneAPIData().loadUser()[0])
-    }
-}
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun UserPreview() {
+//    MomoCinemaTheme {
+//        UserScreen(, DatasourceCloneAPIData().loadUser()[0])
+//    }
+//}

@@ -271,7 +271,7 @@ fun filmComment(comment: COMMENT, ranking: RANKING, user: USER) { //comment, use
                 .padding(start = 5.dp)
                 .fillMaxSize()
             ) {
-                Text(text = user.name.toString(), fontWeight = FontWeight(500), fontSize = 13.sp)
+                Text(text = user.username.toString(), fontWeight = FontWeight(500), fontSize = 13.sp)
                 Row {
                     Icon(imageVector = Icons.Filled.Star, contentDescription = null, tint = Color(0xFFF08715), modifier = Modifier
                         .padding(end = 2.dp)

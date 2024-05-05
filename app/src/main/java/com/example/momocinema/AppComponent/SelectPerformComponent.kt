@@ -63,6 +63,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.momocinema.ViewModel.LoginViewModel
+import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.model.Cinema
 import com.example.momocinema.model.CinemaRoom
 import com.example.momocinema.model.Perform
@@ -221,7 +224,7 @@ fun Showtime(perform: PERFORM, onClick:() -> Unit) {
 }
 
 @Composable
-fun detailCinema(listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, listCINEMA: List<CINEMA>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date) {
+fun detailCinema(mainViewModel: MainViewModel, listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, listCINEMA: List<CINEMA>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date, navigateToAnotherScreen: (String, FILM)->Unit) {
     val extraPadding by animateDpAsState(               // cho phần mở rộng, thu hẹp Showtime
         targetValue = if (isExpanded) 20.dp else 0.dp,
         animationSpec = spring(
@@ -264,7 +267,17 @@ fun detailCinema(listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, l
                     .heightIn(min = 60.dp, max = 127.dp)
             ) {
                 items(availablePerform) {item   ->
-                    Showtime(perform = item, onClick = { /* TODO: chuyển sang trang chọn ghế */})
+                    Showtime(perform = item, onClick = {
+                        if(mainViewModel.applicationState.value.isAuthor){
+                            if(item.film!=null){
+                                navigateToAnotherScreen(ScreenName.SelectSeatScreen.route, item.film)
+                            }
+                        } else{
+                            if(item.film!=null){
+                                navigateToAnotherScreen(ScreenName.LoginScreen.route, item.film)
+                            }
+                        }
+                    })
                 }
             }
         }

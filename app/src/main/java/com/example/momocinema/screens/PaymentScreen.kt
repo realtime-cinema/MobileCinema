@@ -63,10 +63,10 @@ fun PaymentScreen(perform: Perform) {
     }
 }
 
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun PaymentPreview() {
-    MomoCinemaTheme {
-        PaymentScreen(perform = Datasource().loadPerforms()[0])
-    }
-}
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun PaymentPreview() {
+//    MomoCinemaTheme {
+//        PaymentScreen(perform = Datasource().loadPerforms()[0])
+//    }
+//}

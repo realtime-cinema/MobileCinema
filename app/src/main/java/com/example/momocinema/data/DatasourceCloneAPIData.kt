@@ -1,7 +1,6 @@
 package com.example.momocinema.data
 
 
-import com.example.momocinema.listFilm
 import com.example.momocinema.model.Cast
 import com.example.momocinema.model.Cinema
 import com.example.momocinema.model.CinemaLayout
@@ -37,13 +36,13 @@ class DatasourceCloneAPIData() {
 
     fun loadUser(): List<USER> {
         return listOf<USER>(
-            USER("1", "Alex Gi1", "alexgi", 1),
-            USER("2", "Alex Gi2", "alexgi", 1),
-            USER("3", "Alex Gi3", "alexgi", 1),
-            USER("4", "Alex Gi4", "alexgi", 1),
-            USER("5", "Alex Gi5", "alexgi", 1),
-            USER("6", "Alex Gi6", "alexgi", 1),
-            USER("7", "Alex Gi7", "alexgi", 1),
+            USER("1", "Alex Gi1", "alexgi", ""),
+            USER("2", "Alex Gi2", "alexgi", ""),
+            USER("3", "Alex Gi3", "alexgi", ""),
+            USER("4", "Alex Gi4", "alexgi", ""),
+            USER("5", "Alex Gi5", "alexgi", ""),
+            USER("6", "Alex Gi6", "alexgi", ""),
+            USER("7", "Alex Gi7", "alexgi", ""),
         )
     }
     fun loadRanking(): List<RANKING> {

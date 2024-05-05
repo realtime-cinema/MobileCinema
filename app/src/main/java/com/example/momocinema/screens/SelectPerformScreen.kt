@@ -23,6 +23,8 @@ import com.example.momocinema.AppComponent.CustomTopAppBar
 import com.example.momocinema.AppComponent.detailCinema
 import com.example.momocinema.AppComponent.listCinema
 import com.example.momocinema.AppComponent.selectDate
+import com.example.momocinema.ViewModel.LoginViewModel
+import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.model.Cinema
@@ -39,7 +41,7 @@ import java.time.Instant
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 
-fun SelectPerformScreen(film: FILM, listPerform:List<PERFORM>, listCinemaRoom:List<CINEMA_ROOM>, listCinemaName:List<String>, listCINEMA: List<CINEMA>, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
+fun SelectPerformScreen(mainViewModel: MainViewModel, film: FILM, listPerform:List<PERFORM>, listCinemaRoom:List<CINEMA_ROOM>, listCinemaName:List<String>, listCINEMA: List<CINEMA>, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
     var selectedDate by remember{ mutableStateOf(Timestamp.from(Instant.now())) }
     //var selectedCinema: Cinema
     var selectedCinema: String by remember {mutableStateOf("ALL")}
@@ -82,6 +84,7 @@ fun SelectPerformScreen(film: FILM, listPerform:List<PERFORM>, listCinemaRoom:Li
 //              Mặc định sẽ là all, sau khi chọn sẽ filter theo cinema name
                 for (cinemaId in 0..listCinemaAfterFilterBaseOnCinemaName.size-1) {
                     detailCinema(
+                        mainViewModel,
                         listPerform = listPerform,
                         listCinemaRoom = listCinemaRoom,
                         listCINEMA = listCINEMA,
@@ -89,7 +92,8 @@ fun SelectPerformScreen(film: FILM, listPerform:List<PERFORM>, listCinemaRoom:Li
                         isExpanded = (cinemaId == expandedCinemaId),
                         onExpandedButtonClick = {if (expandedCinemaId == cinemaId)expandedCinemaId = -1 else expandedCinemaId = cinemaId },
                         modifier = Modifier,
-                        selectedDate,// để kiểm tra các Perform có start_time sau thời gian CHỌN, nếu h.nay lấy các Perform sau giờ hiện tại, còn lại là sau 00:00
+                        selectedDate, // để kiểm tra các Perform có start_time sau thời gian CHỌN, nếu h.nay lấy các Perform sau giờ hiện tại, còn lại là sau 00:00
+                        navigateToAnotherScreen
                     )
                     // TODO: listPerform sẽ từ List<Perform> của Film
                 }

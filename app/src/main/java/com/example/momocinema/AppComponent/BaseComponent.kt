@@ -9,6 +9,7 @@
  */
 package com.example.momocinema.AppComponent
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.MainViewModel
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -131,21 +133,24 @@ data class BottomNavigationItem(
 )
 
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(mainViewModel: MainViewModel) {
     val bottomNavigationItems = listOf(
         BottomNavigationItem(title = "Chọn phim", selectedIcon = R.drawable.filledticket, unselectedIcon = R.drawable.outlineticket),
         BottomNavigationItem(title = "Chọn rạp", selectedIcon = R.drawable.filledcinema, unselectedIcon = R.drawable.outlinecinema),
         BottomNavigationItem(title = "Tôi", selectedIcon = R.drawable.filledperson, unselectedIcon = R.drawable.outlineperson)
     )
     var selectedItemIndex by remember {
-        mutableStateOf(0)
+        mutableStateOf(mainViewModel.applicationState.value.indexScreen)
     }
+//    TODO: let selectedItemIndex into mainViewModel and update it.
     NavigationBar(containerColor = Color.White) {
         bottomNavigationItems.forEachIndexed { index, bottomNavigationItem ->
             NavigationBarItem(
                 selected = selectedItemIndex == index,
                 onClick = {
                     selectedItemIndex = index
+                    mainViewModel.updateAppScreenState(index)
+                    Log.d("MAIN", mainViewModel.applicationState.value.indexScreen.toString())
                     // TODO: Navigation
                 },
                 label = { Text(text = bottomNavigationItem.title, fontSize = 13.sp, fontWeight = FontWeight(500), color = if (selectedItemIndex == index) Color(0xFF234EC6) else Color.Gray) },

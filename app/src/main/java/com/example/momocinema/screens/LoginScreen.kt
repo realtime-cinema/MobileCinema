@@ -1,5 +1,6 @@
 package com.example.momocinema.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -33,10 +34,15 @@ import com.example.momocinema.AppComponent.CustomButton
 import com.example.momocinema.AppComponent.PasswordTextField
 import com.example.momocinema.AppComponent.TextFieldCustom
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.LoginViewModel
+import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.ScreenName
+import com.example.momocinema.model.User
+import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier.padding(horizontal = 28.dp)) {
+fun LoginScreen(mainViewModel: MainViewModel, loginViewModel: LoginViewModel, navigateToAnotherScreen:(screenName:String, user:USER)->Unit, modifier: Modifier = Modifier.padding(horizontal = 28.dp)) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -89,7 +95,9 @@ fun LoginScreen(modifier: Modifier = Modifier.padding(horizontal = 28.dp)) {
         // TODO?      a thêm vô cho vui, chắc khỏi cũng đc
 
         Divider(thickness = 30.dp, color = Color.White)
-        CustomButton(actionText = R.string.login_button, onClick = { /* TODO */})
+        CustomButton(actionText = R.string.login_button, onClick = {
+            loginViewModel.login(navigateToAnotherScreen, mainViewModel,email, password)
+        })
         Divider(thickness = 8.dp, color = Color.White)
         Row {
             Text(text = stringResource(id = R.string.dont_have_an_account), modifier = Modifier.padding(end = 4.dp))
@@ -101,10 +109,10 @@ fun LoginScreen(modifier: Modifier = Modifier.padding(horizontal = 28.dp)) {
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginPreview() {
-    MomoCinemaTheme {
-        LoginScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginPreview() {
+//    MomoCinemaTheme {
+//        LoginScreen()
+//    }
+//}

@@ -1,6 +1,5 @@
 package com.example.momocinema.data
 
-import com.example.momocinema.listFilm
 import com.example.momocinema.model.Cast
 import com.example.momocinema.model.Cinema
 import com.example.momocinema.model.CinemaLayout
@@ -72,17 +71,17 @@ class Datasource() {
     }
 
 
-    fun loadPerforms(): List<Perform> {
-        return listOf<Perform>(
-            Perform(loadSeats(), film =  listFilm[0], startTime = Timestamp.valueOf("2024-04-07 09:00:00.0"), cinemaRoom = loadCinemaRooms()[0]),
-            Perform(loadSeats(), listFilm[0], startTime = Timestamp.valueOf("2024-04-08 09:30:00.0"), cinemaRoom = loadCinemaRooms()[1]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 11:30:00.0"), cinemaRoom = loadCinemaRooms()[2]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 23:00:00.0"), cinemaRoom = loadCinemaRooms()[3]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 19:30:00.0"), cinemaRoom = loadCinemaRooms()[4]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 17:00:00.0"), cinemaRoom = loadCinemaRooms()[5]),
-            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 17:30:00.0"), cinemaRoom = loadCinemaRooms()[6]),
-        )
-    }
+//    fun loadPerforms(): List<Perform> {
+//        return listOf<Perform>(
+//            Perform(loadSeats(), film =  listFilm[0], startTime = Timestamp.valueOf("2024-04-07 09:00:00.0"), cinemaRoom = loadCinemaRooms()[0]),
+//            Perform(loadSeats(), listFilm[0], startTime = Timestamp.valueOf("2024-04-08 09:30:00.0"), cinemaRoom = loadCinemaRooms()[1]),
+//            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 11:30:00.0"), cinemaRoom = loadCinemaRooms()[2]),
+//            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 23:00:00.0"), cinemaRoom = loadCinemaRooms()[3]),
+//            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 19:30:00.0"), cinemaRoom = loadCinemaRooms()[4]),
+//            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 17:00:00.0"), cinemaRoom = loadCinemaRooms()[5]),
+//            Perform(loadSeats(),listFilm[0], startTime = Timestamp.valueOf("2024-04-08 17:30:00.0"), cinemaRoom = loadCinemaRooms()[6]),
+//        )
+//    }
 
 
     val tempUser = User(name = "Nguyễn Văn A", username = "nguyenvana")

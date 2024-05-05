@@ -12,6 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.momocinema.ViewModel.FilmInfoViewModel
+import com.example.momocinema.ViewModel.LoginViewModel
+import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
@@ -26,23 +28,30 @@ import com.example.momocinema.repository.RANKING
 import com.example.momocinema.repository.TAG
 import com.example.momocinema.repository.USER
 import com.example.momocinema.screens.FilmInfo
+import com.example.momocinema.screens.LoginScreen
+import com.example.momocinema.screens.RegisterScreen
 import com.example.momocinema.screens.ReviewsScreen
+import com.example.momocinema.screens.SelectCinemaTab
 import com.example.momocinema.screens.SelectFilmScreen
 import com.example.momocinema.screens.SelectPerformScreen
+import com.example.momocinema.screens.UserScreen
 import java.sql.Timestamp
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CinemaTicketApp(
     navControler:NavHostController,
+    mainViewModel: MainViewModel,
+    loginViewModel:LoginViewModel,
     selectFilmViewModel:SelectFilmViewModel,
     filmInfoViewModel: FilmInfoViewModel,
     selectPerformViewModel: SelectPerformViewModel
     ){
-    NavHost(navController = navControler, startDestination = ScreenName.SelectFilmScreen.route){
+    NavHost(navController = navControler, startDestination = if(mainViewModel.applicationState.value.indexScreen == 0)ScreenName.SelectFilmScreen.route else if(mainViewModel.applicationState.value.indexScreen==1)ScreenName.SelectFilmAndPerformScreen.route else ScreenName.UserScreen.route){
         composable(ScreenName.SelectFilmScreen.route){
 //            Initial SelectFilmViewModel
             SelectFilmScreen(
+                mainViewModel,
                 selectFilmViewModel,
                 navigateToAnotherScreen = {
                 filmInfoViewModel.fetchFilmInfo()
@@ -119,10 +128,26 @@ fun CinemaTicketApp(
                 if(cinemaRoom.cinema!=null) listCinemaOfFilm.add(cinemaRoom.cinema)
                 setNameCinema.add(listCinemaOfFilm[listCinemaOfFilm.size-1].name.toString())
             }
-            SelectPerformScreen(film = film, listPerform, listCinemaRoomOfFilm.toList(), setNameCinema.toList(), listCinemaOfFilm.toList(), {screenName, film->
+            SelectPerformScreen(mainViewModel, film = film, listPerform, listCinemaRoomOfFilm.toList(), setNameCinema.toList(), listCinemaOfFilm.toList(), {screenName, film->
                 navControler.currentBackStackEntry?.savedStateHandle?.set("film", film)
                 navControler.navigate(screenName)
             })
+        }
+        composable(ScreenName.UserScreen.route){
+            UserScreen(mainViewModel,user = if(mainViewModel.applicationState.value.user!=null) mainViewModel.applicationState.value.user!! else USER(), {screenName ->
+                navControler.navigate(screenName)
+            })
+        }
+        composable(ScreenName.LoginScreen.route){
+            LoginScreen(mainViewModel, loginViewModel, {screenName, user->
+                navControler.navigate(screenName)
+            })
+        }
+        composable(ScreenName.RegisterScreen.route){
+            RegisterScreen()
+        }
+        composable(ScreenName.SelectFilmAndPerformScreen.route){
+            SelectCinemaTab(mainViewModel)
         }
     }
 }

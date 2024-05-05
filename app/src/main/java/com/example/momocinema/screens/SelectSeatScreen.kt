@@ -35,7 +35,6 @@ import com.example.momocinema.AppComponent.SeatStatus
 import com.example.momocinema.AppComponent.displayTotalPrice
 import com.example.momocinema.R
 import com.example.momocinema.data.Datasource
-import com.example.momocinema.listFilm
 import com.example.momocinema.model.Perform
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 import java.sql.Timestamp
@@ -118,13 +117,13 @@ fun SelectSeatScreen(perform: Perform) {
     }
 }
 
-@Preview(showBackground = true, apiLevel = 33)
-@Composable
-fun SelectSeatPreview() {
-    MomoCinemaTheme {
-        SelectSeatScreen(
-            perform = Perform(Datasource().loadSeats(), listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0"), cinemaRoom = Datasource().loadCinemaRooms()[0]),
-           )
-
-    }
-}
+//@Preview(showBackground = true, apiLevel = 33)
+//@Composable
+//fun SelectSeatPreview() {
+//    MomoCinemaTheme {
+//        SelectSeatScreen(
+//            perform = Perform(Datasource().loadSeats(), listFilm[0], startTime = Timestamp.valueOf("2024-03-23 09:00:00.0"), cinemaRoom = Datasource().loadCinemaRooms()[0]),
+//           )
+//
+//    }
+//}
