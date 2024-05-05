@@ -35,6 +35,7 @@ import com.example.momocinema.AppComponent.Seat
 import com.example.momocinema.AppComponent.SeatStatus
 import com.example.momocinema.AppComponent.displayTotalPrice
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.ViewModel.SelectSeetViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.model.Perform
@@ -43,7 +44,7 @@ import com.example.momocinema.ui.theme.MomoCinemaTheme
 import java.sql.Timestamp
 
 @Composable
-fun SelectSeatScreen(selectSeetViewModel: SelectSeetViewModel,perform: PERFORM) {
+fun SelectSeatScreen(selectSeetViewModel: SelectSeetViewModel,perform: PERFORM, navigateToAnotherScreen:(screenName:String)->Unit) {
     var listSeat = mutableStateOf(selectSeetViewModel.selectSeetState.value.data)
     var listPickSeat = mutableStateOf(selectSeetViewModel.selectSeetState.value.listPickSeat)
     var cinemaLayoutMaxX = 0;
@@ -74,7 +75,7 @@ fun SelectSeatScreen(selectSeetViewModel: SelectSeetViewModel,perform: PERFORM) 
             Column {
                 CustomTopAppBar(
                     text = perform.cinema_room!!.cinema!!.name + " " + perform.cinema_room.cinema!!.variant,
-                    onClick = { /* TODO: trở về SelectPerformScreen */ })
+                    onClick = { navigateToAnotherScreen(ScreenName.SelectFilmAndPerformScreen.route) })
             } },
         bottomBar = {
             Column {
@@ -91,9 +92,9 @@ fun SelectSeatScreen(selectSeetViewModel: SelectSeetViewModel,perform: PERFORM) 
                     SeatStatus(text = R.string.VIPSeat, color = Color(0xFFFFCBC3))
                 }
                 Divider(thickness = 10.dp, color = Color.LightGray, modifier = Modifier.padding(bottom = 12.dp))
-                InfoPerform(perform = perform)
+                InfoPerform(perform = perform, navigateToAnotherScreen)
                 displayTotalPrice(totalPrice = totalCost.value)      // TODO: tính toán tiền xong đưa vào
-                CustomButton(actionText =  R.string.continue_button, onClick = { /*TODO: chuyển sang thanh toán*/ })
+                CustomButton(actionText =  R.string.continue_button, onClick = { navigateToAnotherScreen(ScreenName.PaymentScreen.route) })
             }
         }
 

@@ -113,8 +113,8 @@ fun SelectCinemaTab(selectFilmViewModel: SelectFilmViewModel, selectPerformViewM
             Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)) {
                 LazyColumn() {
                     items(selectFilmViewModel.listFilmSelectState.value.listFilm) { film ->
-//                        FilmAndPerform(mainViewModel, film = film, listPerform = selectPerformViewModel.listPerformSelectState.value.listPerform, selectedDate = selectedDate, navigateToAnotherScreen)
-                        FilmAndPerform(mainViewModel, film = selectFilmViewModel.listFilmSelectState.value.listFilm[40], listPerform = selectPerformViewModel.listPerformSelectState.value.listPerform, selectedDate = selectedDate, navigateToAnotherScreen)
+                        FilmAndPerform(mainViewModel, film = film, listPerform = selectPerformViewModel.listPerformSelectState.value.listPerform, selectedDate = selectedDate, navigateToAnotherScreen)
+//                        FilmAndPerform(mainViewModel, film = selectFilmViewModel.listFilmSelectState.value.listFilm[40], listPerform = selectPerformViewModel.listPerformSelectState.value.listPerform, selectedDate = selectedDate, navigateToAnotherScreen)
 
                     }
 

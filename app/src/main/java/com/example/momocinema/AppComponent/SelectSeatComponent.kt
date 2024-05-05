@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.model.Perform
 import com.example.momocinema.model.SeatPrice
 import com.example.momocinema.repository.PERFORM
@@ -37,7 +38,7 @@ fun formatPrice(price: Int): String {
 }
 
 @Composable
-fun InfoPerform(perform: PERFORM) {
+fun InfoPerform(perform: PERFORM, navigateToAnotherScreen:(screenName:String)->Unit) {
     Column {
         Row(horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
@@ -52,7 +53,7 @@ fun InfoPerform(perform: PERFORM) {
                 fontWeight = FontWeight.Bold, color = Color(0xFF234EC6), fontSize = 15.sp,
                 modifier = Modifier
                     .padding(bottom = 1.dp)
-                    .clickable { /* TODO: trở về SelectPerformScreen */ })
+                    .clickable { navigateToAnotherScreen(ScreenName.SelectFilmAndPerformScreen.route) })
         }
 //        Text(
 //            text = "${perform.start_time} ~ ${perform.end_time} | ${dayNames[(perform.startTime.day)]}, ${SimpleDateFormat("dd/MM").format(perform.startTime)} | 2D Phụ đề", // TODO: khúc này đưa viewType, translateType (2D 3D Phụ đề Thuyết minh) của Perform vào

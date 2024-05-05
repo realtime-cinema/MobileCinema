@@ -77,7 +77,6 @@ fun SelectPerformScreen(mainViewModel: MainViewModel, film: FILM, listPerform:Li
             Divider(thickness = 10.dp, color = Color.LightGray)
 
             var expandedCinemaId by remember { mutableStateOf(-1) }
-            val listCinemas: List<Cinema> = Datasource().loadCinemas() // TODO: này dựa trên bộ lọc sau khi chọn ngày và loại cinema
 
             Column {
 //              Chổ này phải lọc listcinema theo tên đã focus trên thanh lọc name cinema

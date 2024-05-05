@@ -32,6 +32,7 @@ import com.example.momocinema.repository.TAG
 import com.example.momocinema.repository.USER
 import com.example.momocinema.screens.FilmInfo
 import com.example.momocinema.screens.LoginScreen
+import com.example.momocinema.screens.PaymentScreen
 import com.example.momocinema.screens.RegisterScreen
 import com.example.momocinema.screens.ReviewsScreen
 import com.example.momocinema.screens.SelectCinemaTab
@@ -165,7 +166,16 @@ fun CinemaTicketApp(
         }
         composable(ScreenName.SelectSeatScreen.route){
             var perform = navControler.previousBackStackEntry?.savedStateHandle?.get<PERFORM>("perform")
-            SelectSeatScreen(selectSeetViewModel,perform = perform!!)
+            SelectSeatScreen(selectSeetViewModel,perform = perform!!, {
+                navControler.currentBackStackEntry?.savedStateHandle?.set("perform", perform)
+                navControler.navigate(it)
+            })
+        }
+        composable(ScreenName.PaymentScreen.route){
+            var perform = navControler.previousBackStackEntry?.savedStateHandle?.get<PERFORM>("perform")
+            PaymentScreen(perform = perform!!, {screenName->
+                navControler.navigate(screenName)
+            })
         }
     }
 }

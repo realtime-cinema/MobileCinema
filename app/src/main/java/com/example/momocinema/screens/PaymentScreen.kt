@@ -25,19 +25,21 @@ import com.example.momocinema.AppComponent.detailPerform
 import com.example.momocinema.AppComponent.detailPrice
 import com.example.momocinema.AppComponent.firstInfo
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.model.Perform
+import com.example.momocinema.repository.PERFORM
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun PaymentScreen(perform: Perform) {
+fun PaymentScreen(perform: PERFORM, navigateToAnotherScreen:(screenName:String)->Unit) {
     val methods = listOf("Momo", "Internet Banking", "ZaloPay")
     var selectedPaymentMethod by remember {
         mutableStateOf("Momo")
     }
 
     Scaffold(
-        topBar = { CustomTopAppBar(text = "Thông tin thanh toán", onClick = {/* TODO: về SelectSeatScreen */}) },
+        topBar = { CustomTopAppBar(text = "Thông tin thanh toán", onClick = {}) },
         bottomBar = { CustomButton(actionText =  R.string.pay_button, onClick = { /*TODO: thanh toán*/ }) }
     ) {it ->
         Column(modifier = Modifier
@@ -45,7 +47,7 @@ fun PaymentScreen(perform: Perform) {
             .verticalScroll(rememberScrollState())
         ) {
 //            firstInfo(film = perform.film) //TODO:: mo ra lam sau (Giap)
-            detailPerform(perform = perform)
+//            detailPerform(perform = perform) //TODO: mo ra lam sau (Giap)
             Divider(thickness = 1.dp)
             detailPrice(amountSelectedSeat = 8, seatType = "VIP", seatPrice = 120000)
             Divider(thickness = 1.dp)
