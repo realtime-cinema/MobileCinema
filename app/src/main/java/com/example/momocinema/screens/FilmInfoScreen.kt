@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.momocinema.AppComponent.CustomButton
 import com.example.momocinema.AppComponent.CustomTopAppBar
+//import com.example.momocinema.AppComponent.TrailerFromUrl
 import com.example.momocinema.AppComponent.castInfo
 import com.example.momocinema.AppComponent.createNewComment
 import com.example.momocinema.AppComponent.detailRating
@@ -63,6 +64,7 @@ import java.sql.Date
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Calendar
+
 import java.util.TimeZone
 
 
@@ -94,10 +96,6 @@ fun FilmInfo(
             .padding(it)
             .verticalScroll(rememberScrollState())
         ) {
-//            Image(painter = painterResource(id = R.drawable.panda), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier
-//                .height(222.dp)
-//                .fillMaxWidth()
-//                .padding(bottom = 10.dp))   //TODO(Thiện): chuyển qua Video
             AsyncImage(
                 model = film.trailer_url.toString(),
                 contentDescription = "${film.title} poster",
@@ -107,6 +105,9 @@ fun FilmInfo(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp)
             )
+//TODO: Sẽ mở ra sau khi update database
+//            TrailerFromUrl(videoUrl = film.trailer_url.toString(), modifier = Modifier.height(222.dp).fillMaxWidth().padding(bottom = 10.dp))
+
 
             // thông tin quan trọng của film
             firstInfo(film = film, tag)
@@ -159,8 +160,10 @@ fun FilmInfo(
 
             // description
             Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(vertical = 17.dp, horizontal = 10.dp)) {
+
                 Text(text = "Nội dung phim", fontWeight = FontWeight(600), fontSize = 19.sp,)
                 expandableText(text = film.description.toString(), isExpanded = isExpanded, onClick = { isExpanded = !isExpanded })
+
             }
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
 
@@ -168,6 +171,7 @@ fun FilmInfo(
             // phần clickable (hiện các phim mà cast đã tham gia) chưa cần thiết, qua giai đoạn 2 làm sau
             // Phần này cast chưa được nối với db nên k theer load cast, tạm thời fix trống
             Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 15.dp)) {
+
                 Text(text = "Đạo diễn & Diễn viên", fontWeight = FontWeight(600), fontSize = 19.sp, modifier = Modifier.padding(bottom = 10.dp))
 //                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
 //                    items(listOf<FILM_CAST>()) { cast ->
@@ -175,6 +179,7 @@ fun FilmInfo(
 //                    }
 //                }
                 Text(text = film.director.toString(), fontWeight = FontWeight(400), fontSize = 12.sp, modifier = Modifier.padding(bottom = 10.dp))
+
             }
             Divider(thickness = 10.dp, color = Color(0xFFE6E6E6))
             // comments

@@ -105,6 +105,7 @@ fun filmCard(
             if (purposeTitle == "Phim sắp chiếu")
                 Text(
                     text = if(time ==null)"null" else "${time.day.toString()}-${time.month.toString()}${time.year.toString()}",
+
                     fontWeight = FontWeight(600),
                     lineHeight = 1.25.sp,
                     fontSize = 13.sp,
