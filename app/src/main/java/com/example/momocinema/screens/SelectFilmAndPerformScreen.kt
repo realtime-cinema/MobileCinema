@@ -41,8 +41,11 @@ import com.example.momocinema.AppComponent.SelectVariantSheet
 import com.example.momocinema.AppComponent.listCinema
 import com.example.momocinema.AppComponent.selectDate
 import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.SelectFilmViewModel
+import com.example.momocinema.ViewModel.SelectPerformViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
+import com.example.momocinema.repository.FILM
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 import kotlinx.coroutines.launch
 import java.sql.Timestamp
@@ -51,7 +54,7 @@ import java.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SelectCinemaTab(mainViewModel: MainViewModel) {
+fun SelectCinemaTab(selectFilmViewModel: SelectFilmViewModel, selectPerformViewModel: SelectPerformViewModel, mainViewModel: MainViewModel, navigateToAnotherScreen:(screenName:String, film:FILM)->Unit) {
     var selectedVariant by remember {
         mutableStateOf("TP.HCM")
     }
@@ -100,18 +103,18 @@ fun SelectCinemaTab(mainViewModel: MainViewModel) {
             if (showBottomSheet)
                 selectedVariant = SelectVariantSheet(closeBottomSheet = { showBottomSheet = false }, selectedVariant)
         },
-        bottomBar = { BottomNavigationBar(mainViewModel) }
+        bottomBar = { BottomNavigationBar( mainViewModel) }
     ) {it ->
         Column(modifier = Modifier
             .padding(it)
             .background(color = Color(0xFFEBEBEB))
         ) {
             Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)) {
-//                LazyColumn() {
-//                    items(DatasourceCloneAPIData().loadFilms()) { film ->
-//                        FilmAndPerform(film = film, listPerform = DatasourceCloneAPIData().loadPerforms(), selectedDate = selectedDate)
-//                    }
-//                }
+                LazyColumn() {
+                    items(selectFilmViewModel.listFilmSelectState.value.listFilm) { film ->
+                        FilmAndPerform(mainViewModel, film = film, listPerform = selectPerformViewModel.listPerformSelectState.value.listPerform, selectedDate = selectedDate, navigateToAnotherScreen)
+                    }
+                }
             }
         }
     }

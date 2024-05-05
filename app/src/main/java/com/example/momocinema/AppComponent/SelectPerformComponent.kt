@@ -285,7 +285,7 @@ fun detailCinema(mainViewModel: MainViewModel, listPerform: List<PERFORM>,listCi
 }
 
 @Composable
-fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.util.Date) {
+fun FilmAndPerform(mainViewModel: MainViewModel,film: FILM, listPerform: List<PERFORM>, selectedDate: java.util.Date, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
     var showInfoSheet by remember { mutableStateOf(false) }
     Column(modifier = Modifier.padding(10.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -313,17 +313,29 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
                 .clip(shape = RoundedCornerShape(8.dp)))
             Column(modifier = Modifier.padding(start = 10.dp)) {
                 Text(text = "2D Phụ đề")
-                var availablePerform = listPerform.filter { perform -> if (perform.start_time!=null)SimpleDateFormat("dd-MM-yyyy").parse(perform.start_time.toString()).after(selectedDate) else false }
+                var availablePerform = listPerform.filter { perform ->
+                    if(perform.film!=null) perform.film.id == film.id else false
+                }
                 LazyVerticalGrid(columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(min = 60.dp, max = 127.dp)
+                        .heightIn(min = 60.dp, max = (availablePerform.size*70).dp)
                     // tính tón height theo số lượng Perform
                 ) {
                     items(availablePerform) {item   ->
-                        Showtime(perform = item, onClick = { /* TODO: chuyển sang trang chọn ghế */})
+                        Showtime(perform = item, onClick = {
+                            if(mainViewModel.applicationState.value.isAuthor){
+                                if(item.film!=null){
+                                    navigateToAnotherScreen(ScreenName.SelectSeatScreen.route, item.film)
+                                }
+                            } else{
+                                if(item.film!=null){
+                                    navigateToAnotherScreen(ScreenName.LoginScreen.route, item.film)
+                                }
+                            }
+                        })
                     }
                 }
             }

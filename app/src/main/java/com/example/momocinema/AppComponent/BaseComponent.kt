@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.momocinema.R
 import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.SelectPerformViewModel
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -150,7 +151,6 @@ fun BottomNavigationBar(mainViewModel: MainViewModel) {
                 onClick = {
                     selectedItemIndex = index
                     mainViewModel.updateAppScreenState(index)
-                    Log.d("MAIN", mainViewModel.applicationState.value.indexScreen.toString())
                     // TODO: Navigation
                 },
                 label = { Text(text = bottomNavigationItem.title, fontSize = 13.sp, fontWeight = FontWeight(500), color = if (selectedItemIndex == index) Color(0xFF234EC6) else Color.Gray) },

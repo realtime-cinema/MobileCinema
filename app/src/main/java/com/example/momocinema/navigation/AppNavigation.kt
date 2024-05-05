@@ -87,7 +87,7 @@ fun CinemaTicketApp(
             var listRank = selectFilmViewModel.listFilmSelectState.value.listRanking
 
             FilmInfo(filmSelected, filmTag, listCommentOfFilmSelected, listRank, listUser, navigateToAnotherScreen = {stringName,averageRank, amountRank, listTypeRank->
-                selectPerformViewModel.fetchListPerform()
+
                 navControler.currentBackStackEntry?.savedStateHandle?.set("film", filmSelected)
                 navControler.currentBackStackEntry?.savedStateHandle?.set("list_comment", listCommentOfFilmSelected)
                 navControler.currentBackStackEntry?.savedStateHandle?.set("list_rank", listRank)
@@ -153,7 +153,9 @@ fun CinemaTicketApp(
             })
         }
         composable(ScreenName.SelectFilmAndPerformScreen.route){
-            SelectCinemaTab(mainViewModel)
+            SelectCinemaTab(selectFilmViewModel, selectPerformViewModel, mainViewModel, {screenName, film ->
+                navControler.navigate(screenName)
+            })
         }
 //        composable(ScreenName.SelectSeatScreen.route){
 //            SelectSeatScreen(perform = PERFORM())

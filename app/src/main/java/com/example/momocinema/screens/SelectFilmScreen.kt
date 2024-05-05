@@ -18,6 +18,7 @@ import com.example.momocinema.AppComponent.ListTrendingNow
 import com.example.momocinema.AppComponent.briefFilmList
 import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.ViewModel.SelectFilmViewModel
+import com.example.momocinema.ViewModel.SelectPerformViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.RANKING

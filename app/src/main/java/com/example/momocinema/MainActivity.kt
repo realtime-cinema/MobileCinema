@@ -84,6 +84,7 @@ class MainActivity : ComponentActivity() {
 
         val selectPerformViewModelFactory = SelectPerformViewModelFactory()
         val selectPerformViewModel = ViewModelProvider(this, selectPerformViewModelFactory)[SelectPerformViewModel::class.java]
+        selectPerformViewModel.fetchListPerform()
         setContent {
             val navController = rememberNavController()
             MomoCinemaTheme {
