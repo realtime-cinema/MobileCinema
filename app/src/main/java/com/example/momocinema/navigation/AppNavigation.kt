@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +15,7 @@ import com.example.momocinema.ViewModel.FilmInfoViewModel
 import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
+import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.repository.CINEMA
@@ -30,34 +33,48 @@ import java.sql.Timestamp
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CinemaTicketApp(navControler:NavHostController){
-    val selectFilmViewModel = SelectFilmViewModel()
-    val initialFilmObject = FILM(0, "", "", "", "", "", Timestamp(0), "", 0, 0)
+fun CinemaTicketApp(
+    navControler:NavHostController,
+    selectFilmViewModel:SelectFilmViewModel,
+    filmInfoViewModel: FilmInfoViewModel,
+    selectPerformViewModel: SelectPerformViewModel
+    ){
     NavHost(navController = navControler, startDestination = ScreenName.SelectFilmScreen.route){
         composable(ScreenName.SelectFilmScreen.route){
-            SelectFilmScreen(selectFilmViewModel,navigateToAnotherScreen = {
-                navControler.currentBackStackEntry?.savedStateHandle?.set("film", it)
+//            Initial SelectFilmViewModel
+            SelectFilmScreen(
+                selectFilmViewModel,
+                navigateToAnotherScreen = {
+                filmInfoViewModel.fetchFilmInfo()
+                navControler
+                    .currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("film", it)
                 navControler.navigate(ScreenName.FilmInfoScreen.route)
+
             })
         }
         composable(ScreenName.FilmInfoScreen.route){
-            val filmInfoViewModel = FilmInfoViewModel()
             val filmSelected = navControler.previousBackStackEntry
                 ?.savedStateHandle
                 ?.get<FILM>("film")
-                ?:initialFilmObject
+                ?:FILM()
 //            Filter tag
-            var filmTag = selectFilmViewModel.listFilmSelectStateFake.value.listTag.find { tag ->
-                tag.id == filmSelected.id
-            }?: TAG(0, "")
+            var filmTag = /*selectFilmViewModel.listFilmSelectState.value.listTag.find { tag ->
+                tag[0].id == filmSelected.id
+            }?: TAG(0, "")*/ listOf(TAG(name = "Hành động"), TAG(name = "Phiêu lưu"))
+
 //            Filter list comment and user
-            var listCommentOfFilmSelected = filmInfoViewModel.listFilmInfoStateFake.value.listComment.filter { comment->
+            var listCommentOfFilmSelected = /*filmInfoViewModel.listFilmInfoState.value.listComment.filter { comment->
                 comment.dest_id == filmSelected.id
-            }
-            var listUser = filmInfoViewModel.listFilmInfoStateFake.value.listUser
+            }*/ listOf<COMMENT>()
+
+            var listUser = filmInfoViewModel.listFilmInfoState.value.listUser
 //            Get list rank
-            var listRank = selectFilmViewModel.listFilmSelectStateFake.value.listRanking
+            var listRank = selectFilmViewModel.listFilmSelectState.value.listRanking
+
             FilmInfo(filmSelected, filmTag, listCommentOfFilmSelected, listRank, listUser, navigateToAnotherScreen = {stringName,averageRank, amountRank, listTypeRank->
+                selectPerformViewModel.fetchListPerform()
                 navControler.currentBackStackEntry?.savedStateHandle?.set("film", filmSelected)
                 navControler.currentBackStackEntry?.savedStateHandle?.set("list_comment", listCommentOfFilmSelected)
                 navControler.currentBackStackEntry?.savedStateHandle?.set("list_rank", listRank)
@@ -70,14 +87,14 @@ fun CinemaTicketApp(navControler:NavHostController){
             })
         }
         composable(ScreenName.DetailReviewScreen.route){
-            val film = navControler.previousBackStackEntry?.savedStateHandle?.get<FILM>("film")?:initialFilmObject
+            val film = navControler.previousBackStackEntry?.savedStateHandle?.get<FILM>("film")?:FILM()
             val listComment = navControler.previousBackStackEntry?.savedStateHandle?.get<List<COMMENT>>("list_comment")?: listOf()
             val listRank = navControler.previousBackStackEntry?.savedStateHandle?.get<List<RANKING>>("list_rank")?: listOf()
             val listUser = navControler.previousBackStackEntry?.savedStateHandle?.get<List<USER>>("list_user")?: listOf()
             val averageRank = navControler.previousBackStackEntry?.savedStateHandle?.get<Float>("average_rank")?: 0.0f
             val amountRank = navControler.previousBackStackEntry?.savedStateHandle?.get<Int>("amount_rank")?: 0
             val listTypeRank = navControler.previousBackStackEntry?.savedStateHandle?.get<MutableList<Int>>("list_type_rank")?: mutableListOf(0,0,0,0,0)
-            val filmTag = navControler.previousBackStackEntry?.savedStateHandle?.get<TAG>("tag")?:TAG(0, "")
+            val filmTag = navControler.previousBackStackEntry?.savedStateHandle?.get<List<TAG>>("tag")?: listOf()
             navControler.currentBackStackEntry?.savedStateHandle?.set("film", film)
             ReviewsScreen(film, listRank, listComment, listUser, averageRank, amountRank, listTypeRank,filmTag, {screen, film->
                 navControler.currentBackStackEntry?.savedStateHandle?.set("film", film)
@@ -85,27 +102,22 @@ fun CinemaTicketApp(navControler:NavHostController){
             })
         }
         composable(ScreenName.SelectPerformScreen.route){
-            val selectPerformViewModel = SelectPerformViewModel()
-            val film = navControler.previousBackStackEntry?.savedStateHandle?.get<FILM>("film")?:initialFilmObject
+            val film = navControler.previousBackStackEntry?.savedStateHandle?.get<FILM>("film")?:FILM()
 
-            val listCinemaRoom = selectPerformViewModel.listPerformSelectStateFake.value.listCinemaRoom
             var listCinemaRoomOfFilm:MutableList<CINEMA_ROOM> = mutableListOf()
-            val listCinema = selectPerformViewModel.listPerformSelectStateFake.value.listCinema
             var listCinemaOfFilm:MutableList<CINEMA> = mutableListOf()
-            val listPerform = selectPerformViewModel.listPerformSelectStateFake.value.listPerform.filter { perform->
-                perform.film_id == film.id
+
+            val listPerform = selectPerformViewModel.listPerformSelectState.value.listPerform.filter { perform->
+                if(perform.film!=null) perform.film.id == film.id else false
             }
             var setNameCinema:MutableSet<String> = mutableSetOf()
             listPerform.forEach {perform->
-                listCinemaRoomOfFilm.add(listCinemaRoom.find { cinema_room->
-                    cinema_room.id == perform.dest_id
-                }?: CINEMA_ROOM(0, 0, 0, 0, ""))
+                if(perform.cinema_room!=null) listCinemaRoomOfFilm.add(perform.cinema_room)
             }
+
             listCinemaRoomOfFilm.forEach { cinemaRoom ->
-                listCinemaOfFilm.add(listCinema.find { cinema ->
-                    cinema.id == cinemaRoom.cinema_id
-                }?:CINEMA(0, "", ""))
-                setNameCinema.add(listCinemaOfFilm[listCinemaOfFilm.size-1].name)
+                if(cinemaRoom.cinema!=null) listCinemaOfFilm.add(cinemaRoom.cinema)
+                setNameCinema.add(listCinemaOfFilm[listCinemaOfFilm.size-1].name.toString())
             }
             SelectPerformScreen(film = film, listPerform, listCinemaRoomOfFilm.toList(), setNameCinema.toList(), listCinemaOfFilm.toList(), {screenName, film->
                 navControler.currentBackStackEntry?.savedStateHandle?.set("film", film)

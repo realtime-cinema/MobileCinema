@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -66,6 +67,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.momocinema.AppComponent.CustomTopAppBar
@@ -76,7 +78,12 @@ import com.example.momocinema.AppComponent.briefFilmList
 import com.example.momocinema.AppComponent.listCinema
 import com.example.momocinema.AppComponent.restrictAgeTag
 import com.example.momocinema.AppComponent.selectDate
+import com.example.momocinema.ViewModel.FilmInfoViewModel
 import com.example.momocinema.ViewModel.SelectFilmViewModel
+import com.example.momocinema.ViewModel.SelectPerformViewModel
+import com.example.momocinema.ViewModelFactory.FilmInfoViewModelFactory
+import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
+import com.example.momocinema.ViewModelFactory.SelectPerformViewModelFactory
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.model.Film
@@ -93,10 +100,20 @@ import java.sql.Timestamp
 import java.time.Instant
 
 class MainActivity : ComponentActivity() {
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val selectFilmViewModelFactory = SelectFilmViewModelFactory()
+        val selectFilmViewModel = ViewModelProvider(this, selectFilmViewModelFactory)[SelectFilmViewModel::class.java]
+        selectFilmViewModel.fetchListFilm()
 
+        val filmInfoViewModelFactory = FilmInfoViewModelFactory()
+        val filmInfoViewModel = ViewModelProvider(this, filmInfoViewModelFactory)[FilmInfoViewModel::class.java]
+
+        val selectPerformViewModelFactory = SelectPerformViewModelFactory()
+        val selectPerformViewModel = ViewModelProvider(this, selectPerformViewModelFactory)[SelectPerformViewModel::class.java]
         setContent {
             val navController = rememberNavController()
             MomoCinemaTheme {
@@ -105,10 +122,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CinemaTicketApp(navControler = navController)
+                    CinemaTicketApp(
+                        navControler = navController,
+                        selectFilmViewModel,
+                        filmInfoViewModel,
+                        selectPerformViewModel
+                    )
                     }
                 }
-            }
+            }////////////////
         }
     }
 

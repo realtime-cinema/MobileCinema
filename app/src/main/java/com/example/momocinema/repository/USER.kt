@@ -6,10 +6,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class USER(
-    val id:Int,
-    val name:String,
-    val username:String,
-    val role:Int,
+    val id:String? = null,
+    val name:String? = null,
+    val username:String? = null,
+    val role:Int? = null,
 ):Parcelable
 
 data class UserRespone(val UserList:List<USER>)

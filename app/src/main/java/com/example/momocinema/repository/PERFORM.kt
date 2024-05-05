@@ -7,14 +7,19 @@ import java.sql.Timestamp
 
 @Parcelize
 data class PERFORM(
-    val id:Int,
-    val film_id:Int,
-    val view_type_id:Int,
-    val translate_type_id:Int,
-    val dest_id:Int,
-    val price:Int,
-    val start_time:Timestamp,
-    val end_time:Timestamp,
+    val id:String? = null,
+    val film:FILM? = null,
+    val view_type:VIEW_TYPE? = null,
+    val translate_type:TRANSLATE_TYPE? = null,
+    val cinema_room:CINEMA_ROOM? = null,
+    val start_time:String? = null,
+    val end_time:String? = null,
 ):Parcelable
 
-data class PerformRespone(val PerformList:List<PERFORM>)
+
+
+
+data class PerformRespone(
+    val `data`: List<PERFORM>,
+    val message: String
+)

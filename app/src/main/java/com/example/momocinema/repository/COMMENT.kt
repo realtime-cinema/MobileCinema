@@ -6,10 +6,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class COMMENT(
-    val id:Int,
-    val user_id:Int,
-    val dest_id:Int,
-    val body:String,
+    val id:String? = null,
+    val user_id:String? = null,
+    val dest_id:String? = null,
+    val body:String? = null,
 ):Parcelable
 
 data class CommentRespone(val CommentList:List<COMMENT>)

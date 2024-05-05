@@ -106,11 +106,11 @@ fun SelectCinemaTab() {
             .background(color = Color(0xFFEBEBEB))
         ) {
             Card(colors = CardDefaults.cardColors(Color.White), modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)) {
-                LazyColumn() {
-                    items(DatasourceCloneAPIData().loadFilms()) { film ->
-                        FilmAndPerform(film = film, listPerform = DatasourceCloneAPIData().loadPerforms(), selectedDate = selectedDate)
-                    }
-                }
+//                LazyColumn() {
+//                    items(DatasourceCloneAPIData().loadFilms()) { film ->
+//                        FilmAndPerform(film = film, listPerform = DatasourceCloneAPIData().loadPerforms(), selectedDate = selectedDate)
+//                    }
+//                }
             }
         }
     }

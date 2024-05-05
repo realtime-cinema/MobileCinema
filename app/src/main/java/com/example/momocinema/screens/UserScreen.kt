@@ -67,7 +67,7 @@ fun UserScreen(user: USER) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Divider(thickness = 42.dp, color = Color.White, modifier = Modifier.padding(top = 10.dp))
-                    Text(text = user.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text(text = user.name.toString(), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     Row(
                         modifier = Modifier
                             .padding(top = 17.dp)

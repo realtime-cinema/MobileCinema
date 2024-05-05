@@ -6,11 +6,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SEAT_PRICE(
-    val id:Int,
-    val perform_id:Int,
-    val x:Int,
-    val y:Int,
-    val price:Int,
+    val id:String? = null,
+    val perform_id:String? = null,
+    val x:Int? = null,
+    val y:Int? = null,
+    val price:Int? = null,
 ):Parcelable
 
 data class SeatPriceRespone(val SeatPriceList:List<SEAT_PRICE>)

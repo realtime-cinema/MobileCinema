@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CINEMA(
-    val id:Int,
-    val variant:String,
-    val name:String,
+    val id:String? = null,
+    val variant:String? = null,
+    val name:String? = null,
 ):Parcelable
 
 data class CinemaRespone(val CinemaList:List<CINEMA>)

@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CINEMA_LAYOUT(
-    val id:Int,
-    val max_x:Int,
-    val max_y:Int,
+    val id:String? = null,
+    val x_index:Int? = null,
+    val y_index:Int? = null,
 ):Parcelable
 
 data class CinemaLayoutRespone(val CinemaLayoutList:List<CINEMA_LAYOUT>)

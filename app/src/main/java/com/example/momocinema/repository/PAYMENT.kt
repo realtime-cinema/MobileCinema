@@ -7,11 +7,11 @@ import java.sql.Timestamp
 
 @Parcelize
 data class PAYMENT(
-    val id:Int,
-    val user_id:Int,
-    val cinema_id:Int,
-    val date_create:Timestamp,
-    val amount:Int,
+    val id:String? = null,
+    val user_id:String? = null,
+    val cinema_id:String? = null,
+    val date_create:Timestamp? = null,
+    val amount:Int? = null,
 ):Parcelable
 
 data class PaymentRespone(val PaymentList:List<PAYMENT>)

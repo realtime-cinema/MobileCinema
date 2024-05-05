@@ -1,6 +1,7 @@
 package com.example.momocinema.AppComponent
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -71,9 +72,11 @@ import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.PERFORM
 import kotlinx.coroutines.launch
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 
 @Composable
 fun DayCard(
@@ -194,11 +197,24 @@ fun Showtime(perform: PERFORM, onClick:() -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.size(132.dp, 52.dp)
         ) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(text = getStringOfTime(perform.start_time), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Text(text = " ~ ${getStringOfTime(perform.end_time)}", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(bottom = 2.dp))
+            var start_time_date: java.util.Date? = null
+            var end_time_date: java.util.Date? = null
+            if (perform.start_time!=null){
+                start_time_date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX").parse(perform.start_time.toString())
             }
-            Text(text = "139/139 Ghế", fontSize = 12.sp, color = Color.Gray)
+            if (perform.end_time!=null){
+                end_time_date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX").parse(perform.end_time.toString())
+            }
+            var start_time = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            start_time.time = start_time_date
+            var end_time = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            end_time.time = end_time_date
+
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(text = if(start_time_date !=null)"${start_time.get(Calendar.HOUR)}:${start_time.get(Calendar.MINUTE)}" else "null", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = if(end_time_date !=null)" ~ ${end_time.get(Calendar.HOUR)}:${end_time.get(Calendar.MINUTE)}" else " ~ null", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Gray, modifier = Modifier.padding(bottom = 2.dp))
+            }
+//            Text(text = "139/139 Ghế", fontSize = 12.sp, color = Color.Gray)
             // TODO: "139/139 ghế" này a ko biết lấy dữ liệu sao
         }
     }
@@ -222,7 +238,7 @@ fun detailCinema(listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, l
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start = 10.dp)) {
                     Text(text = "${cinema.name} ${cinema.variant}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    Text(text = cinema.variant, fontSize = 14.sp, color = Color.Gray)
+                    Text(text = cinema.variant.toString(), fontSize = 14.sp, color = Color.Gray)
                 }
             }
             IconButton(onClick = onExpandedButtonClick) {
@@ -232,16 +248,14 @@ fun detailCinema(listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, l
         if (isExpanded) Column(Modifier.padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
             Text(text = "2D Phụ đề" /* TODO: truyền viewType, translateType */, fontSize = 17.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 5.dp, start = 3.dp))
 //          avaiablePerform phải là list đã lọc theo tên rạp, thời gian chiếu
+
             var availablePerform = listPerform.filter { perform->
-                var cinemaRoomOfPerform = listCinemaRoom. find { cinemaRoom ->
-                    perform.dest_id == cinemaRoom.id
-                }?: CINEMA_ROOM(-1, -1, -1, -1, "")
-                var CinemaOfPerform = listCINEMA.find {cinema->
-                    cinema.id ==cinemaRoomOfPerform.cinema_id
-                }?:CINEMA(-1, "", "")
-                cinema.name == CinemaOfPerform.name
+
+                var cinemaRoomOfPerform = perform.cinema_room
+                var CinemaOfPerform = perform.cinema_room?.cinema
+                cinema.id == CinemaOfPerform?.id.toString()
             }
-            availablePerform = availablePerform.filter { perform -> perform.start_time.after(seletedDate)}
+//            availablePerform = availablePerform.filter { perform -> if (perform.start_time!=null)SimpleDateFormat("dd-MM-yyyy").parse(perform.start_time.toString()).after(seletedDate) else false}
             LazyVerticalGrid(columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -261,7 +275,7 @@ fun detailCinema(listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, l
 fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.util.Date) {
     Column(modifier = Modifier.padding(10.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            Text(text = film.title,
+            Text(text = film.title.toString(),
                 fontWeight = FontWeight(600),
                 fontSize = 16.sp,
                 color = Color.Black,
@@ -273,7 +287,7 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
                 Text(text = "Chi tiết", fontSize = 14.sp, fontWeight = FontWeight(500), color = Color(0xFF234EC6), modifier = Modifier
                     .clickable { /* TODO: Thiện*/}
                 )
-                restrictAgeTag(restrictAge = film.restrict_age)
+                restrictAgeTag(restrictAge = if (film.restrict_age!=null)film.restrict_age else 18)
             }
 
         }
@@ -285,7 +299,7 @@ fun FilmAndPerform(film: FILM, listPerform: List<PERFORM>, selectedDate: java.ut
                 .clip(shape = RoundedCornerShape(8.dp)))
             Column(modifier = Modifier.padding(start = 10.dp)) {
                 Text(text = "2D Phụ đề")
-                var availablePerform = listPerform.filter { perform -> perform.start_time.after(selectedDate) }
+                var availablePerform = listPerform.filter { perform -> if (perform.start_time!=null)SimpleDateFormat("dd-MM-yyyy").parse(perform.start_time.toString()).after(selectedDate) else false }
                 LazyVerticalGrid(columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalArrangement = Arrangement.SpaceEvenly,

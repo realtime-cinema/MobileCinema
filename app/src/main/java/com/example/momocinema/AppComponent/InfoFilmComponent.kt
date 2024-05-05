@@ -63,7 +63,14 @@ import com.example.momocinema.repository.USER
 val focusRequester = FocusRequester()
 
 @Composable
-fun firstInfo(film: FILM, tag: TAG) {
+fun firstInfo(film: FILM, tag: List<TAG>) {
+    var tagStr = ""
+    film.tags?.let {
+        it.forEach {
+            tagStr = tagStr + " " + it.name
+        }
+    }
+
     Row(modifier = Modifier.padding(horizontal = 10.dp)) {
 //        Image(painter = painterResource(id = film.picture), contentDescription = null, modifier = Modifier
 //            .width(120.dp)
@@ -75,7 +82,7 @@ fun firstInfo(film: FILM, tag: TAG) {
             .clip(shape = RoundedCornerShape(8.dp)))
         Column(modifier = Modifier.padding(start = 5.dp, end = 10.dp)) {
             Text(
-                text = film.title,
+                text = film.title.toString(),
                 fontWeight = FontWeight(600),
                 fontSize = 20.sp,
                 color = Color.Black,
@@ -86,7 +93,7 @@ fun firstInfo(film: FILM, tag: TAG) {
                     .padding(top = 3.dp, start = 5.dp)
             )
             Text(
-                text = tag.tag,
+                text = tagStr,
                 fontWeight = FontWeight(450),
                 fontSize = 13.sp,
                 color = Color(0xFF797979),
@@ -98,7 +105,7 @@ fun firstInfo(film: FILM, tag: TAG) {
                     .padding(top = 5.dp, start = 5.dp, bottom = 5.dp)
             )
             Row {
-                restrictAgeTag(restrictAge = film.restrict_age)
+                restrictAgeTag(restrictAge = if(film.restrict_age!=null)film.restrict_age!! else 18)
                 Text(
                     text = stringResource(
                         id = when (film.restrict_age) {
@@ -252,7 +259,7 @@ fun filmComment(comment: COMMENT, ranking: RANKING, user: USER) { //comment, use
                 .padding(start = 5.dp)
                 .fillMaxSize()
             ) {
-                Text(text = user.name, fontWeight = FontWeight(500), fontSize = 13.sp)
+                Text(text = user.name.toString(), fontWeight = FontWeight(500), fontSize = 13.sp)
                 Row {
                     Icon(imageVector = Icons.Filled.Star, contentDescription = null, tint = Color(0xFFF08715), modifier = Modifier
                         .padding(end = 2.dp)
@@ -262,7 +269,7 @@ fun filmComment(comment: COMMENT, ranking: RANKING, user: USER) { //comment, use
             }
         }
         expandableText(
-            text = comment.body,
+            text = comment.body.toString(),
             isExpanded = isExpanded,
             onClick = { isExpanded = !isExpanded})
         Divider(thickness = 1.dp, modifier = Modifier.padding(vertical = 10.dp))
@@ -329,12 +336,12 @@ fun listCommentOfFilm(averageRanking: Float,
                 for(comment in listComment) {
                     val user = listUser.find { user->
                         user.id == comment.user_id
-                    }?:USER(0, "", "", 0)
+                    }?:USER()
 
 // TODO    xu ly loc ranking nap vao
                     val ranking = listRanking.find { ranking->
                         ranking.from_id == user.id && ranking.dest_id == film.id
-                    }?:RANKING(0, 0, 0, 0, "")
+                    }?:RANKING()
 // TODO    xu ly loc user nap vao
 
                     filmComment(comment = comment, ranking, user)

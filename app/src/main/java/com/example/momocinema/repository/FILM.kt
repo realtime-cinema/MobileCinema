@@ -7,16 +7,20 @@ import java.sql.Timestamp
 
 @Parcelize
 data class FILM(
-    val id:Int,
-    val title:String,
-    val director:String,
-    val description:String,
-    val picture_url:String,
-    val trailer_url:String,
-    val release_date:Timestamp,
-    val language:String,
-    val restrict_age:Int,
-    val duration:Int,
+    val country: String? =null,
+    val description: String? =null,
+    val director: String? =null,
+    val duration: Int? =null,
+    val id: String? =null,
+    val picture_url: String? =null,
+    val release_date: String? =null,
+    val restrict_age: Int? =null,
+    val tags: List<TAG>? =null,
+    val title: String? =null,
+    val trailer_url: String? =null
 ):Parcelable
 
-data class FilmRespone(val FilmList:List<FILM>)
+data class FilmRespone(
+    val `data`: List<FILM>,
+    val message: String
+)

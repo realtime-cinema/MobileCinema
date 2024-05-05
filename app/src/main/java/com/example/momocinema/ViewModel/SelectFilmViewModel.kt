@@ -1,43 +1,22 @@
 package com.example.momocinema.ViewModel
 
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.momocinema.APIService.recipeService
+import com.example.momocinema.APIService.APIService
+import com.example.momocinema.APIService.SimpleApi
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.repository.FILM
 import com.example.momocinema.repository.RANKING
 import com.example.momocinema.repository.TAG
 import kotlinx.coroutines.launch
+import retrofit2.create
 
 class SelectFilmViewModel:ViewModel() {
     private val _listFilmSelectStateFake = mutableStateOf(FilmSelectState())
     val listFilmSelectStateFake = _listFilmSelectStateFake
-
-
-
-
-    // fake data here----begin
-    fun fakeFetchListFilm(){
-        _listFilmSelectStateFake.value = _listFilmSelectStateFake.value.copy(
-            error = false,
-            loading = false,
-            listRanking = DatasourceCloneAPIData().loadRanking(),
-            listFilm = DatasourceCloneAPIData().loadFilms(),
-            listFilmHaventPerformed = DatasourceCloneAPIData().loadFilms(),
-            listFilmOutstanding = DatasourceCloneAPIData().loadFilms(),
-            listTag = DatasourceCloneAPIData().loadTags(),
-            listFilmPerforming = DatasourceCloneAPIData().loadFilms(),
-        )
-    }
-
-    // fake data here----end
-
-    init {
-        /*fetchListFilm()*/
-        fakeFetchListFilm()
-    }
 
     private var _listFilmSelectState = mutableStateOf(FilmSelectState())
     var listFilmSelectState = _listFilmSelectState
@@ -48,47 +27,53 @@ class SelectFilmViewModel:ViewModel() {
         return 0
     }
     private fun filterListPerforming(list:List<FILM>): List<FILM> {
-        currentTime = System.currentTimeMillis()
-        var listPerforming:MutableList<FILM> = mutableListOf()
-        for (item in list){
-            if (convertStringDayToLong(item.release_date.toString())<=currentTime){
-                listPerforming.add(item)
-            }
-        }
-        return listPerforming
+//        currentTime = System.currentTimeMillis()
+//        var listPerforming:MutableList<FILM> = mutableListOf()
+//        for (item in list){
+//            if (convertStringDayToLong(item.release_date.toString())<=currentTime){
+//                listPerforming.add(item)
+//            }
+//        }
+//        return listPerforming
+        return list
     }
     private fun filterListHaventPerformed(list:List<FILM>): List<FILM> {
-        currentTime = System.currentTimeMillis()
-        var listHaventPerformed:MutableList<FILM> = mutableListOf()
-        for (item in list){
-            if (convertStringDayToLong(item.release_date.toString())>currentTime){
-                listHaventPerformed.add(item)
-            }
-        }
-        return listHaventPerformed
+//        currentTime = System.currentTimeMillis()
+//        var listHaventPerformed:MutableList<FILM> = mutableListOf()
+//        for (item in list){
+//            if (convertStringDayToLong(item.release_date.toString())>currentTime){
+//                listHaventPerformed.add(item)
+//            }
+//        }
+//        return listHaventPerformed
+        return list
     }
     private fun filterListOutstanding(list:List<FILM>): List<FILM> {
-        var listOutstanding:MutableList<FILM> = mutableListOf()
-        for (item in list){
-            var totalStar = 0;
-            for (rank in _listFilmSelectState.value.listRanking){
-                if (rank.id == item.id){
-                    totalStar += rank.ranking.toInt();
-                }
-            }
-            if (totalStar>=4.0){
-                listOutstanding.add(item)
-            }
-        }
-        return listOutstanding
+//        var listOutstanding:MutableList<FILM> = mutableListOf()
+//        for (item in list){
+//            var totalStar = 0;
+//            for (rank in _listFilmSelectState.value.listRanking){
+//                if (rank.id == item.id){
+//                    totalStar += rank.ranking.toInt();
+//                }
+//            }
+//            if (totalStar>=4.0){
+//                listOutstanding.add(item)
+//            }
+//        }
+//        return listOutstanding
+        return list
     }
     fun averageRankOfFilm(listRank:List<RANKING>, film:FILM):Float{
         var average:Float = 0.0f
         var total = 0;
         for (item in listRank){
             if (item.dest_id == film.id){
-                total++;
-                average = average+item.ranking
+                if(item.ranking!=null){
+                    total++;
+                    average = average+item.ranking!!
+                }
+
             }
         }
         average = if (total == 0) 0.0f else average/total
@@ -106,20 +91,29 @@ class SelectFilmViewModel:ViewModel() {
     fun fetchListFilm(){
         viewModelScope.launch {
             try {
-                val fetchFilmRespone = recipeService.getListFilm()
-                val fetchRankingRespone = recipeService.getRanking()
-                val fetchTagRespone = recipeService.getTag()
-                _listFilmSelectState.value = _listFilmSelectState.value.copy(
-                    loading = false,
-                    error  =false,
-                    listFilm = fetchFilmRespone.FilmList,
-                    listRanking = fetchRankingRespone.RankingList,
-                    listFilmOutstanding = filterListOutstanding(fetchFilmRespone.FilmList),
-                    listFilmPerforming = filterListPerforming(fetchFilmRespone.FilmList),
-                    listTag = fetchTagRespone.TagList,
-                    listFilmHaventPerformed = filterListHaventPerformed(fetchFilmRespone.FilmList),
-                )
+
+                val retrofit = SimpleApi.retrofit.create(APIService::class.java)
+                val fetchFilmRespone1 = retrofit.getListFilm()
+                Log.d("SUCCESS", fetchFilmRespone1.body().toString())
+                val fetchFilmRespone = fetchFilmRespone1.body()
+
+                val fetchRankingRespone = DatasourceCloneAPIData().loadRanking()  //backlog
+                val fetchTagRespone = DatasourceCloneAPIData().loadTags()  //backlog
+                fetchFilmRespone?.let {
+                    _listFilmSelectState.value = _listFilmSelectState.value.copy(
+                        loading = false,
+                        error  =false,
+                        listFilm = fetchFilmRespone.data,
+                        listRanking = fetchRankingRespone,  //backlog
+                        listFilmOutstanding = filterListOutstanding(fetchFilmRespone.data),
+                        listFilmPerforming = filterListPerforming(fetchFilmRespone.data),
+                        listTag = fetchTagRespone,//backlog
+                        listFilmHaventPerformed = filterListHaventPerformed(fetchFilmRespone.data),
+                    )
+                }
+
             }catch (e:Exception){
+                Log.d("ERROR", e.toString())
                 _listFilmSelectState.value = _listFilmSelectState.value.copy(
                     loading = false,
                     error = true
@@ -134,7 +128,7 @@ class SelectFilmViewModel:ViewModel() {
         val listRanking:List<RANKING> = listOf(),
         val listFilmOutstanding:List<FILM> = listOf(),
         val listFilmPerforming:List<FILM> = listOf(),
-        val listTag:List<TAG> = listOf(),
+        val listTag:List<List<TAG>> = listOf(),
         val listFilmHaventPerformed:List<FILM> = listOf(),
     )
 }

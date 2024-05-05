@@ -19,28 +19,36 @@ import com.example.momocinema.AppComponent.briefFilmList
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.RANKING
+import com.example.momocinema.repository.TAG
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-// Khi nào a trở lại làm thanh navigation thì cứ sài datasource của anh nha, đừng quan tâm datasource của em
-fun SelectFilmScreen(listFilmViewModel:SelectFilmViewModel,navigateToAnotherScreen:(film:FILM)->Unit, modifier: Modifier = Modifier) {
+
+fun SelectFilmScreen(
+    selectFilmViewModel: SelectFilmViewModel,
+    navigateToAnotherScreen:(film:FILM)->Unit,
+    modifier: Modifier = Modifier) {
     Scaffold(
         bottomBar = { BottomNavigationBar() }
-    ) {it ->
+    ) {
         Column(
             modifier = modifier
                 .padding(it)
                 .verticalScroll(rememberScrollState())
         ) {
-            ListTrendingNow(listFilmViewModel, purposeTitle = "Phim nổi bật", navigateToAnotherScreen)   //               // TODO: truyền listFilm phù hợp vào
+            ListTrendingNow(
+                selectFilmViewModel,
+                purposeTitle = "Phim nổi bật",
+                navigateToAnotherScreen)   //               // TODO: truyền listFilm phù hợp vào
 
             Divider(thickness = 10.dp, color = Color(0xFFEEEEEE))
 
-            briefFilmList(listFilmViewModel, purposeTitle = "Phim hay đang chiếu", navigateToAnotherScreen)               // TODO: truyền listFilm phù hợp vào
+            briefFilmList(selectFilmViewModel, purposeTitle = "Phim hay đang chiếu", navigateToAnotherScreen)               // TODO: truyền listFilm phù hợp vào
 
             Divider(thickness = 10.dp, color = Color(0xFFEEEEEE))
 
-            briefFilmList(listFilmViewModel, purposeTitle = "Phim sắp chiếu", navigateToAnotherScreen)                // TODO: truyền listFilm phù hợp vào
+            briefFilmList(selectFilmViewModel, purposeTitle = "Phim sắp chiếu", navigateToAnotherScreen)                // TODO: truyền listFilm phù hợp vào
         }
     }
 

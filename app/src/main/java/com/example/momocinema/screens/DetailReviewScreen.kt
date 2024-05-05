@@ -34,14 +34,14 @@ import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun ReviewsScreen(film:FILM, listRank:List<RANKING>, listComment: List<COMMENT>, listUser:List<USER>, averageRank:Float, amountRank:Int, listTypeRank:MutableList<Int>, filmTag:TAG, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
+fun ReviewsScreen(film:FILM, listRank:List<RANKING>, listComment: List<COMMENT>, listUser:List<USER>, averageRank:Float, amountRank:Int, listTypeRank:MutableList<Int>, filmTag:List<TAG>, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
     Scaffold(
         topBar = {
             Column {
                 CustomTopAppBar(text = "Đánh giá", onClick = { navigateToAnotherScreen(ScreenName.FilmInfoScreen.route, film) })
                 Row(modifier = Modifier.padding(7.dp)) {
                     Text(text = "Đánh giá của ", fontSize = 13.sp)
-                    Text(text = film.title, fontSize = 13.sp, color = Color(0xFF234EC6), fontWeight = FontWeight(500))
+                    Text(text = film.title.toString(), fontSize = 13.sp, color = Color(0xFF234EC6), fontWeight = FontWeight(500))
                 }
             }
         }
@@ -63,12 +63,12 @@ fun ReviewsScreen(film:FILM, listRank:List<RANKING>, listComment: List<COMMENT>,
             items(listComment) {comment ->
                 val user = listUser.find { user->
                     user.id == comment.user_id
-                }?:USER(0, "", "", 0)
+                }?:USER()
 
 // TODO    xu ly loc ranking nap vao
                 val ranking = listRank.find { ranking->
                     ranking.from_id == user.id && ranking.dest_id == film.id
-                }?:RANKING(0, 0, 0, 0, "")
+                }?:RANKING()
                 filmComment(comment = comment, ranking = ranking, user = user)
             }
         }

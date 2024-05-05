@@ -50,7 +50,7 @@ fun SelectPerformScreen(film: FILM, listPerform:List<PERFORM>, listCinemaRoom:Li
     Scaffold(
         topBar = {
             Column {
-                CustomTopAppBar(text = film.title, onClick = { navigateToAnotherScreen(ScreenName.FilmInfoScreen.route, film)})
+                CustomTopAppBar(text = film.title.toString(), onClick = { navigateToAnotherScreen(ScreenName.FilmInfoScreen.route, film)})
                 Divider(thickness = 10.dp, color = Color.White)
                 selectedDate = selectDate()
                 // trả về Timestamp cho bộ lọc, nếu khác ngày hiện tại sẽ set thời gian 00:00
