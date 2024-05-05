@@ -44,12 +44,14 @@ import com.example.momocinema.ViewModel.MainViewModel
 import com.example.momocinema.ViewModel.RegisterViewModel
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
+import com.example.momocinema.ViewModel.SelectSeetViewModel
 import com.example.momocinema.ViewModelFactory.FilmInfoViewModelFactory
 import com.example.momocinema.ViewModelFactory.LoginViewModelFactory
 import com.example.momocinema.ViewModelFactory.MainViewModelFactory
 import com.example.momocinema.ViewModelFactory.RegisterViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectPerformViewModelFactory
+import com.example.momocinema.ViewModelFactory.SelectSeetViewModelFactory
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.navigation.CinemaTicketApp
@@ -85,6 +87,9 @@ class MainActivity : ComponentActivity() {
         val selectPerformViewModelFactory = SelectPerformViewModelFactory()
         val selectPerformViewModel = ViewModelProvider(this, selectPerformViewModelFactory)[SelectPerformViewModel::class.java]
         selectPerformViewModel.fetchListPerform()
+
+        val selectSeetViewModelFactory  =SelectSeetViewModelFactory()
+        val selectSeetViewModel = ViewModelProvider(this, selectSeetViewModelFactory)[SelectSeetViewModel::class.java]
         setContent {
             val navController = rememberNavController()
             MomoCinemaTheme {
@@ -100,7 +105,8 @@ class MainActivity : ComponentActivity() {
                         registerViewModel,
                         selectFilmViewModel,
                         filmInfoViewModel,
-                        selectPerformViewModel
+                        selectPerformViewModel,
+                        selectSeetViewModel,
                     )
                     }
                 }

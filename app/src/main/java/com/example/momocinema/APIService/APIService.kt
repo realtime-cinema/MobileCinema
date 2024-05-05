@@ -6,7 +6,9 @@ import com.example.momocinema.repository.CinemaRoomRespone
 import com.example.momocinema.repository.CommentRespone
 import com.example.momocinema.repository.FilmRespone
 import com.example.momocinema.repository.PerformRespone
+import com.example.momocinema.repository.PickSeatRespone
 import com.example.momocinema.repository.RankingRespone
+import com.example.momocinema.repository.SeatPriceRespone
 import com.example.momocinema.repository.USER
 import com.example.momocinema.repository.USERPOST
 import com.example.momocinema.repository.UserRespone
@@ -16,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface APIService{
     @GET("api/v1/films?") //listFilm
@@ -30,6 +33,14 @@ interface APIService{
     suspend fun register(@Body user: USERPOST):Response<UserRespone>
     @GET("/api/v1/performs?") //perform
     suspend fun getAllPerform():Response<PerformRespone>
+    @GET("/api/v1/seat-price/{idPerform}")
+    suspend fun getSeatOfPerform(
+        @Path("idPerform") idPerform : String,
+    ):Response<SeatPriceRespone>
+    @GET("/api/v1/pick-seat/{idPerform}")
+    suspend fun getPickSeatOfPerform(
+        @Path("idPerform") idPerform : String,
+    ):Response<PickSeatRespone>
     @GET("/api/v1/rooms") //cinema room
     suspend fun getCinemaRoom():CinemaRoomRespone
     @GET("/api/v1/cinemas") //cinema

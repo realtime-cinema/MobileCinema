@@ -224,7 +224,7 @@ fun Showtime(perform: PERFORM, onClick:() -> Unit) {
 }
 
 @Composable
-fun detailCinema(mainViewModel: MainViewModel, listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, listCINEMA: List<CINEMA>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date, navigateToAnotherScreen: (String, FILM)->Unit) {
+fun detailCinema(mainViewModel: MainViewModel, listPerform: List<PERFORM>,listCinemaRoom: List<CINEMA_ROOM>, listCINEMA: List<CINEMA>, cinema: CINEMA, isExpanded: Boolean, onExpandedButtonClick:() -> Unit, modifier: Modifier = Modifier, seletedDate: Date, navigateToAnotherScreen: (String, FILM, PERFORM)->Unit) {
     val extraPadding by animateDpAsState(               // cho phần mở rộng, thu hẹp Showtime
         targetValue = if (isExpanded) 20.dp else 0.dp,
         animationSpec = spring(
@@ -270,11 +270,11 @@ fun detailCinema(mainViewModel: MainViewModel, listPerform: List<PERFORM>,listCi
                     Showtime(perform = item, onClick = {
                         if(mainViewModel.applicationState.value.isAuthor){
                             if(item.film!=null){
-                                navigateToAnotherScreen(ScreenName.SelectSeatScreen.route, item.film)
+                                navigateToAnotherScreen(ScreenName.SelectSeatScreen.route, item.film, item)
                             }
                         } else{
                             if(item.film!=null){
-                                navigateToAnotherScreen(ScreenName.LoginScreen.route, item.film)
+                                navigateToAnotherScreen(ScreenName.LoginScreen.route, item.film, item)
                             }
                         }
                     })
@@ -285,7 +285,7 @@ fun detailCinema(mainViewModel: MainViewModel, listPerform: List<PERFORM>,listCi
 }
 
 @Composable
-fun FilmAndPerform(mainViewModel: MainViewModel,film: FILM, listPerform: List<PERFORM>, selectedDate: java.util.Date, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
+fun FilmAndPerform(mainViewModel: MainViewModel,film: FILM, listPerform: List<PERFORM>, selectedDate: java.util.Date, navigateToAnotherScreen:(ScreenName:String, film:FILM, perform:PERFORM)->Unit) {
     var showInfoSheet by remember { mutableStateOf(false) }
     Column(modifier = Modifier.padding(10.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -328,11 +328,11 @@ fun FilmAndPerform(mainViewModel: MainViewModel,film: FILM, listPerform: List<PE
                         Showtime(perform = item, onClick = {
                             if(mainViewModel.applicationState.value.isAuthor){
                                 if(item.film!=null){
-                                    navigateToAnotherScreen(ScreenName.SelectSeatScreen.route, item.film)
+                                    navigateToAnotherScreen(ScreenName.SelectSeatScreen.route, item.film, item)
                                 }
                             } else{
                                 if(item.film!=null){
-                                    navigateToAnotherScreen(ScreenName.LoginScreen.route, item.film)
+                                    navigateToAnotherScreen(ScreenName.LoginScreen.route, item.film, item)
                                 }
                             }
                         })

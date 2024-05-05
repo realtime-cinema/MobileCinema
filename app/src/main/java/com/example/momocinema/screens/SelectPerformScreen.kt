@@ -41,7 +41,7 @@ import java.time.Instant
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 
-fun SelectPerformScreen(mainViewModel: MainViewModel, film: FILM, listPerform:List<PERFORM>, listCinemaRoom:List<CINEMA_ROOM>, listCinemaName:List<String>, listCINEMA: List<CINEMA>, navigateToAnotherScreen:(ScreenName:String, film:FILM)->Unit) {
+fun SelectPerformScreen(mainViewModel: MainViewModel, film: FILM, listPerform:List<PERFORM>, listCinemaRoom:List<CINEMA_ROOM>, listCinemaName:List<String>, listCINEMA: List<CINEMA>, navigateToAnotherScreen:(ScreenName:String, film:FILM, perform:PERFORM)->Unit) {
     var selectedDate by remember{ mutableStateOf(Timestamp.from(Instant.now())) }
     //var selectedCinema: Cinema
     var selectedCinema: String by remember {mutableStateOf("ALL")}
@@ -52,7 +52,7 @@ fun SelectPerformScreen(mainViewModel: MainViewModel, film: FILM, listPerform:Li
     Scaffold(
         topBar = {
             Column {
-                CustomTopAppBar(text = film.title.toString(), onClick = { navigateToAnotherScreen(ScreenName.FilmInfoScreen.route, film)})
+                CustomTopAppBar(text = film.title.toString(), onClick = { navigateToAnotherScreen(ScreenName.FilmInfoScreen.route, film, PERFORM())})
                 Divider(thickness = 10.dp, color = Color.White)
                 selectedDate = selectDate()
                 // trả về Timestamp cho bộ lọc, nếu khác ngày hiện tại sẽ set thời gian 00:00

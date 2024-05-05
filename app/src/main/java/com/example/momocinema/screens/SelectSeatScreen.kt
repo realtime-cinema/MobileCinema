@@ -1,5 +1,6 @@
 package com.example.momocinema.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -34,23 +35,45 @@ import com.example.momocinema.AppComponent.Seat
 import com.example.momocinema.AppComponent.SeatStatus
 import com.example.momocinema.AppComponent.displayTotalPrice
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.SelectSeetViewModel
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.model.Perform
+import com.example.momocinema.repository.PERFORM
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 import java.sql.Timestamp
 
 @Composable
-fun SelectSeatScreen(perform: Perform) {
-    val cinemaLayoutMaxX = perform.cinemaRoom.cinemaLayout.maxX
-    val cinemaLayoutMaxY = perform.cinemaRoom.cinemaLayout.maxY
-    // //TODO: truyền maxY cho thích hợp
-    var isSelected = MutableList((cinemaLayoutMaxX+1) * (cinemaLayoutMaxY+1)) { mutableStateOf(false) }
+fun SelectSeatScreen(selectSeetViewModel: SelectSeetViewModel,perform: PERFORM) {
+    var listSeat = mutableStateOf(selectSeetViewModel.selectSeetState.value.data)
+    var listPickSeat = mutableStateOf(selectSeetViewModel.selectSeetState.value.listPickSeat)
+    var cinemaLayoutMaxX = 0;
+    var cinemaLayoutMaxY = 0;
+    if(perform!=null){
+        cinemaLayoutMaxX = perform!!.cinema_room!!.cinema_layout!!.x_index!!
+        cinemaLayoutMaxY = perform!!.cinema_room!!.cinema_layout!!.y_index!!
+    }
+//    // //TODO: truyền maxY cho thích hợp
+    val totalCost = mutableStateOf(0)
+    var isSelected = MutableList(cinemaLayoutMaxX) {
+        MutableList(cinemaLayoutMaxY){
+            mutableStateOf(false)
+        }
+    }
+    var isOrdered = MutableList(cinemaLayoutMaxX) {
+        MutableList(cinemaLayoutMaxY){
+            mutableStateOf(false)
+        }
+    }
+    listPickSeat.value.forEach { pickSeat ->
+        isOrdered[pickSeat.x!!-1][pickSeat.y!!-1].value = true
+    }
+//    TODO:Update state sau khi fetch list pickseat
 
     Scaffold(
         topBar = {
             Column {
                 CustomTopAppBar(
-                    text = perform.cinemaRoom.cinema.name + " " + perform.cinemaRoom.cinema.variant,
+                    text = perform.cinema_room!!.cinema!!.name + " " + perform.cinema_room.cinema!!.variant,
                     onClick = { /* TODO: trở về SelectPerformScreen */ })
             } },
         bottomBar = {
@@ -69,7 +92,7 @@ fun SelectSeatScreen(perform: Perform) {
                 }
                 Divider(thickness = 10.dp, color = Color.LightGray, modifier = Modifier.padding(bottom = 12.dp))
                 InfoPerform(perform = perform)
-                displayTotalPrice(totalPrice = 12345678)      // TODO: tính toán tiền xong đưa vào
+                displayTotalPrice(totalPrice = totalCost.value)      // TODO: tính toán tiền xong đưa vào
                 CustomButton(actionText =  R.string.continue_button, onClick = { /*TODO: chuyển sang thanh toán*/ })
             }
         }
@@ -101,14 +124,18 @@ fun SelectSeatScreen(perform: Perform) {
                         height = (cinemaLayoutMaxY * 36).dp
                     )
                 ) {
-                    items(perform.listSeat) { seat ->
+                    items(listSeat.value) { seat ->
                         Seat(seat = seat,
-                            availableSeat = true,   // ghế đã có ng đặt hay chưa
-                            selectingSeat = isSelected[(seat.y - 1) * cinemaLayoutMaxX + seat.x].value,
+                            availableSeat = !isOrdered[seat.x!!-1][seat.y!!-1].value,   // ghế đã có ng đặt hay chưa
+                            selectingSeat = isSelected[seat.x-1][seat.y-1].value,
                             onClick = {     //TODO hàm khi chọn ghế, chỉ cho phép chọn tối đa 8 ghế
-                                isSelected[(seat.y - 1) * cinemaLayoutMaxX + seat.x].value =
-                                    !isSelected[(seat.y - 1) * cinemaLayoutMaxX + seat.x].value
-                            }
+                                isSelected[seat.x-1][seat.y-1].value =
+                                    !isSelected[seat.x-1][seat.y-1].value
+                                totalCost.value+=listSeat.value.find { seatPrice ->
+                                    (seat.x == seatPrice.x)&&(seat.y == seatPrice.y)
+                                }!!.price!!
+                            },
+                            onClickUnavaiableSeat = {}
                         )
                     }
                 }

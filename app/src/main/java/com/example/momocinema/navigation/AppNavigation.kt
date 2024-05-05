@@ -18,6 +18,7 @@ import com.example.momocinema.ViewModel.RegisterViewModel
 import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
+import com.example.momocinema.ViewModel.SelectSeetViewModel
 import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
 import com.example.momocinema.data.Datasource
 import com.example.momocinema.data.DatasourceCloneAPIData
@@ -49,7 +50,8 @@ fun CinemaTicketApp(
     registerViewModel: RegisterViewModel,
     selectFilmViewModel:SelectFilmViewModel,
     filmInfoViewModel: FilmInfoViewModel,
-    selectPerformViewModel: SelectPerformViewModel
+    selectPerformViewModel: SelectPerformViewModel,
+    selectSeetViewModel: SelectSeetViewModel,
     ){
     NavHost(navController = navControler, startDestination = if(mainViewModel.applicationState.value.indexScreen == 0)ScreenName.SelectFilmScreen.route else if(mainViewModel.applicationState.value.indexScreen==1)ScreenName.SelectFilmAndPerformScreen.route else ScreenName.UserScreen.route){
         composable(ScreenName.SelectFilmScreen.route){
@@ -132,8 +134,9 @@ fun CinemaTicketApp(
                 if(cinemaRoom.cinema!=null) listCinemaOfFilm.add(cinemaRoom.cinema)
                 setNameCinema.add(listCinemaOfFilm[listCinemaOfFilm.size-1].name.toString())
             }
-            SelectPerformScreen(mainViewModel, film = film, listPerform, listCinemaRoomOfFilm.toList(), setNameCinema.toList(), listCinemaOfFilm.toList(), {screenName, film->
+            SelectPerformScreen(mainViewModel, film = film, listPerform, listCinemaRoomOfFilm.toList(), setNameCinema.toList(), listCinemaOfFilm.toList(), {screenName, film, perform->
                 navControler.currentBackStackEntry?.savedStateHandle?.set("film", film)
+                navControler.currentBackStackEntry?.savedStateHandle?.set("perform", perform)
                 navControler.navigate(screenName)
             })
         }
@@ -153,12 +156,16 @@ fun CinemaTicketApp(
             })
         }
         composable(ScreenName.SelectFilmAndPerformScreen.route){
-            SelectCinemaTab(selectFilmViewModel, selectPerformViewModel, mainViewModel, {screenName, film ->
+            SelectCinemaTab(selectFilmViewModel, selectPerformViewModel, mainViewModel, {screenName, film, perform ->
+                selectSeetViewModel.fetchSeet(perform.id.toString())
+
+                navControler.currentBackStackEntry?.savedStateHandle?.set("perform", perform)
                 navControler.navigate(screenName)
             })
         }
-//        composable(ScreenName.SelectSeatScreen.route){
-//            SelectSeatScreen(perform = PERFORM())
-//        }
+        composable(ScreenName.SelectSeatScreen.route){
+            var perform = navControler.previousBackStackEntry?.savedStateHandle?.get<PERFORM>("perform")
+            SelectSeatScreen(selectSeetViewModel,perform = perform!!)
+        }
     }
 }

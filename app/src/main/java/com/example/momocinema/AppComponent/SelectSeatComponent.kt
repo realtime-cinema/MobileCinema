@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import com.example.momocinema.R
 import com.example.momocinema.model.Perform
 import com.example.momocinema.model.SeatPrice
+import com.example.momocinema.repository.PERFORM
+import com.example.momocinema.repository.SEAT_PRICE
 import java.text.SimpleDateFormat
 
 fun formatPrice(price: Int): String {
@@ -35,7 +37,7 @@ fun formatPrice(price: Int): String {
 }
 
 @Composable
-fun InfoPerform(perform: Perform) {
+fun InfoPerform(perform: PERFORM) {
     Column {
         Row(horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
@@ -43,8 +45,8 @@ fun InfoPerform(perform: Perform) {
                 .padding(start = 5.dp, end = 10.dp)
                 .fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                restrictAgeTag(restrictAge = perform.film.restrictAge)
-                Text(text = perform.film.title, fontWeight = FontWeight.Bold, fontSize = 18.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(210.dp))
+                restrictAgeTag(restrictAge = perform.film!!.restrict_age!!)
+                Text(text = perform.film!!.title.toString(), fontWeight = FontWeight.Bold, fontSize = 18.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(210.dp))
             }
             Text(text = stringResource(id = R.string.change_perform),
                 fontWeight = FontWeight.Bold, color = Color(0xFF234EC6), fontSize = 15.sp,
@@ -52,10 +54,10 @@ fun InfoPerform(perform: Perform) {
                     .padding(bottom = 1.dp)
                     .clickable { /* TODO: trở về SelectPerformScreen */ })
         }
-        Text(
-            text = "${getStringOfTime(perform.startTime)} ~ ${getStringOfTime(perform.endTime)} | ${dayNames[(perform.startTime.day)]}, ${SimpleDateFormat("dd/MM").format(perform.startTime)} | 2D Phụ đề", // TODO: khúc này đưa viewType, translateType (2D 3D Phụ đề Thuyết minh) của Perform vào
-            color = Color(0xFF732BF5), modifier = Modifier.padding(start = 10.dp), fontSize = 13.sp
-        )
+//        Text(
+//            text = "${perform.start_time} ~ ${perform.end_time} | ${dayNames[(perform.startTime.day)]}, ${SimpleDateFormat("dd/MM").format(perform.startTime)} | 2D Phụ đề", // TODO: khúc này đưa viewType, translateType (2D 3D Phụ đề Thuyết minh) của Perform vào
+//            color = Color(0xFF732BF5), modifier = Modifier.padding(start = 10.dp), fontSize = 13.sp
+//        )
     }
 }
 
@@ -84,14 +86,24 @@ fun displayTotalPrice(totalPrice: Int) {
 }
 
 @Composable
-fun Seat(seat: SeatPrice, availableSeat: Boolean, selectingSeat: Boolean, onClick:() -> Unit) {
-    val containerColor = if (selectingSeat) Color(0xFF234EC6) else
-        if (seat.type == "VIP") Color(0xFFFFCBC3) else Color(0xFFEFDBFE)
-    val contentColor = if (selectingSeat) Color.White else
-        if (seat.type == "VIP") Color.Red else Color(0xFFEA3FF7)
-    val seatName = "${Char('A'.code + seat.y - 1)}${seat.x}"
+fun Seat(seat: SEAT_PRICE, availableSeat: Boolean, selectingSeat: Boolean, onClick:() -> Unit, onClickUnavaiableSeat:()->Unit) {
+    var containerColor = Color(0xFFEA3FF7)
+    var contentColor = Color.White
+    if(!availableSeat){
+        containerColor = if (selectingSeat) Color(0xFF234EC6) else/*
+        if (seat.type == "VIP") Color(0xFFFFCBC3) else */Color(0xFFEFDBFE)
+        contentColor = if (selectingSeat) Color.White /*else
+        if (seat.type == "VIP") Color.Red */else Color(0xFFEA3FF7)
+    }else if(selectingSeat){
+        containerColor = if (selectingSeat) Color(0xFF234EC6) else/*
+        if (seat.type == "VIP") Color(0xFFFFCBC3) else */Color(0xFFEFDBFE)
+        contentColor = if (selectingSeat) Color.White /*else
+        if (seat.type == "VIP") Color.Red */else Color(0xFFEA3FF7)
+    }
+
+    val seatName = /*"${Char('A'.code + seat.y!! - 1)}${seat.x}"*/"A"+"1"
     Button(
-        onClick = onClick,
+        onClick = if(availableSeat)onClick else onClickUnavaiableSeat,
         enabled = availableSeat,
         shape = RoundedCornerShape(5.dp),
         colors = ButtonDefaults.buttonColors(
