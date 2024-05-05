@@ -1,6 +1,7 @@
 package com.example.momocinema.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,17 +42,21 @@ import androidx.compose.ui.unit.sp
 import com.example.momocinema.AppComponent.PasswordTextField
 import com.example.momocinema.AppComponent.TextFieldCustom
 import com.example.momocinema.R
+import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.RegisterViewModel
+import com.example.momocinema.ViewModel.ScreenName
+import com.example.momocinema.repository.USER
 import com.example.momocinema.ui.theme.MomoCinemaTheme
 
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
-    var fullName by remember {
+fun RegisterScreen(mainViewModel: MainViewModel, registerViewModel: RegisterViewModel, navigateToAnotherScreen:(screenName:String, user:USER)->Unit,modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
+    var firstName by remember {
+        mutableStateOf("")
+    }
+    var lastName by remember {
         mutableStateOf("")
     }
     var email by remember {
-        mutableStateOf("")
-    }
-    var phone by remember {             // thêm cho có
         mutableStateOf("")
     }
     var password by remember {
@@ -65,13 +70,8 @@ fun RegisterScreen(modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = modifier) {
-        Divider(thickness = 25.dp, color = Color.White)
-        IconButton(onClick = { /*TODO: trở về LoginScreen*/ }, modifier = modifier.align(Alignment.Start)) {
-            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = Color(0xFF234EC6), modifier = Modifier
-                .size(32.dp)
-                .scale(scaleX = 1.2f, scaleY = 1f))
-        }
         Divider(thickness = 20.dp, color = Color.White)
         Text(text = stringResource(id = R.string.register), fontSize = 30.sp, fontWeight = FontWeight(800), color = Color(0xFF234EC6))
         Divider(thickness = 2.dp, color = Color.White)
@@ -85,8 +85,20 @@ fun RegisterScreen(modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            value = fullName,
-            onValueChange = { fullName = it },
+            value = firstName,
+            onValueChange = { firstName = it },
+            modifier = Modifier.size(width = 310.dp, height = 65.dp)
+        )
+        Divider(thickness = 22.dp, color = Color.White)
+        TextFieldCustom(
+            label = R.string.last_name_label,
+            leadingIcon = Icons.Outlined.Person,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            value = lastName,
+            onValueChange = { lastName = it },
             modifier = Modifier.size(width = 310.dp, height = 65.dp)
         )
         Divider(thickness = 22.dp, color = Color.White)
@@ -100,19 +112,6 @@ fun RegisterScreen(modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
             ),
             value = email,
             onValueChange = { email = it },
-            modifier = Modifier.size(width = 310.dp, height = 65.dp)
-        )
-        Divider(thickness = 22.dp, color = Color.White)
-
-        TextFieldCustom(
-            label = R.string.phone_label,
-            leadingIcon = Icons.Outlined.Phone,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Phone,
-                imeAction = ImeAction.Next
-            ),
-            value = phone,
-            onValueChange = { phone = it },
             modifier = Modifier.size(width = 310.dp, height = 65.dp)
         )
         Divider(thickness = 22.dp, color = Color.White)
@@ -144,13 +143,13 @@ fun RegisterScreen(modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
         Divider(thickness = 15.dp, color = Color.White)
 
         Button(             // button: CREATE ACCOUNT
-            onClick = { /*TODO*/ },
+            onClick = { registerViewModel.register(mainViewModel, firstName, lastName, email, password, navigateToAnotherScreen) },
             modifier = modifier
                 .fillMaxWidth()
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF234EC6), contentColor = Color.White),
             shape = RoundedCornerShape(5.dp),
-            enabled = (fullName != "" && email != "" && validPassword == 0 && password == confirmPassword)
+            enabled = (firstName != "" && lastName != "" &&email != "" && validPassword == 0 && password == confirmPassword)
             // chỉ cho tạo tk khi điền đủ thông tin
         ) {
             Text(text = stringResource(id = R.string.create_account), fontWeight = FontWeight(500), fontSize = 16.sp)
@@ -160,16 +159,16 @@ fun RegisterScreen(modifier: Modifier = Modifier.padding(horizontal = 20.dp)) {
         Row {
             Text(text = stringResource(id = R.string.already_have_account), modifier = Modifier.padding(end = 4.dp))
             Text(text = stringResource(id = R.string.login), fontWeight = FontWeight.Bold, color = Color(0xFF234EC6),
-                modifier = Modifier.clickable {  })
+                modifier = Modifier.clickable { navigateToAnotherScreen(ScreenName.LoginScreen.route, USER()) })
             // TODO: chuyển qua LoginScreen
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview() {
-    MomoCinemaTheme {
-        RegisterScreen()
-    }
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun RegisterPreview() {
+//    MomoCinemaTheme {
+//        RegisterScreen()
+//    }
+//}

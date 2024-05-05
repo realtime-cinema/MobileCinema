@@ -41,11 +41,13 @@ import com.example.momocinema.AppComponent.selectDate
 import com.example.momocinema.ViewModel.FilmInfoViewModel
 import com.example.momocinema.ViewModel.LoginViewModel
 import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.RegisterViewModel
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
 import com.example.momocinema.ViewModelFactory.FilmInfoViewModelFactory
 import com.example.momocinema.ViewModelFactory.LoginViewModelFactory
 import com.example.momocinema.ViewModelFactory.MainViewModelFactory
+import com.example.momocinema.ViewModelFactory.RegisterViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectPerformViewModelFactory
 import com.example.momocinema.data.Datasource
@@ -70,6 +72,9 @@ class MainActivity : ComponentActivity() {
         val loginViewModelFactory = LoginViewModelFactory()
         val loginViewModel = ViewModelProvider(this, loginViewModelFactory)[LoginViewModel::class.java]
 
+        val registerViewModelFactory = RegisterViewModelFactory()
+        val registerViewModel = ViewModelProvider(this, registerViewModelFactory)[RegisterViewModel::class.java]
+
         val selectFilmViewModelFactory = SelectFilmViewModelFactory()
         val selectFilmViewModel = ViewModelProvider(this, selectFilmViewModelFactory)[SelectFilmViewModel::class.java]
         selectFilmViewModel.fetchListFilm()
@@ -91,6 +96,7 @@ class MainActivity : ComponentActivity() {
                         navControler = navController,
                         mainViewModel,
                         loginViewModel,
+                        registerViewModel,
                         selectFilmViewModel,
                         filmInfoViewModel,
                         selectPerformViewModel

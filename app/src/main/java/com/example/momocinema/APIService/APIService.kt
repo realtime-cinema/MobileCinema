@@ -8,6 +8,7 @@ import com.example.momocinema.repository.FilmRespone
 import com.example.momocinema.repository.PerformRespone
 import com.example.momocinema.repository.RankingRespone
 import com.example.momocinema.repository.USER
+import com.example.momocinema.repository.USERPOST
 import com.example.momocinema.repository.UserRespone
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -25,6 +26,8 @@ interface APIService{
     suspend fun getComment():CommentRespone
     @POST("/api/auth/authenticate") //user
     suspend fun getUser(@Body user: USER):Response<UserRespone>
+    @POST("/api/auth/register") //user
+    suspend fun register(@Body user: USERPOST):Response<UserRespone>
     @GET("/api/v1/performs?") //perform
     suspend fun getAllPerform():Response<PerformRespone>
     @GET("/api/v1/rooms") //cinema room

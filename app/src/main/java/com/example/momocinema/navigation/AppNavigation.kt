@@ -14,6 +14,7 @@ import androidx.navigation.navigation
 import com.example.momocinema.ViewModel.FilmInfoViewModel
 import com.example.momocinema.ViewModel.LoginViewModel
 import com.example.momocinema.ViewModel.MainViewModel
+import com.example.momocinema.ViewModel.RegisterViewModel
 import com.example.momocinema.ViewModel.ScreenName
 import com.example.momocinema.ViewModel.SelectFilmViewModel
 import com.example.momocinema.ViewModel.SelectPerformViewModel
@@ -24,6 +25,7 @@ import com.example.momocinema.repository.CINEMA
 import com.example.momocinema.repository.CINEMA_ROOM
 import com.example.momocinema.repository.COMMENT
 import com.example.momocinema.repository.FILM
+import com.example.momocinema.repository.PERFORM
 import com.example.momocinema.repository.RANKING
 import com.example.momocinema.repository.TAG
 import com.example.momocinema.repository.USER
@@ -34,6 +36,7 @@ import com.example.momocinema.screens.ReviewsScreen
 import com.example.momocinema.screens.SelectCinemaTab
 import com.example.momocinema.screens.SelectFilmScreen
 import com.example.momocinema.screens.SelectPerformScreen
+import com.example.momocinema.screens.SelectSeatScreen
 import com.example.momocinema.screens.UserScreen
 import java.sql.Timestamp
 
@@ -43,6 +46,7 @@ fun CinemaTicketApp(
     navControler:NavHostController,
     mainViewModel: MainViewModel,
     loginViewModel:LoginViewModel,
+    registerViewModel: RegisterViewModel,
     selectFilmViewModel:SelectFilmViewModel,
     filmInfoViewModel: FilmInfoViewModel,
     selectPerformViewModel: SelectPerformViewModel
@@ -144,10 +148,15 @@ fun CinemaTicketApp(
             })
         }
         composable(ScreenName.RegisterScreen.route){
-            RegisterScreen()
+            RegisterScreen(mainViewModel, registerViewModel,{screenName, user ->
+                navControler.navigate(screenName)
+            })
         }
         composable(ScreenName.SelectFilmAndPerformScreen.route){
             SelectCinemaTab(mainViewModel)
         }
+//        composable(ScreenName.SelectSeatScreen.route){
+//            SelectSeatScreen(perform = PERFORM())
+//        }
     }
 }

@@ -9,7 +9,7 @@ val okHttpClient = OkHttpClient()
     .addInterceptor { chain ->
         val request = chain.request().newBuilder()
             .addHeader("Content-Type", "application/json")
-            .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4dWFuZ2lhcDA4MDZAZ21haWwuY29tIiwiaWF0IjoxNzE0Nzg1MjIzLCJleHAiOjE3MTU2NzQyNTV9.7dwbpPS0ERRG8E0zriAh_Td0peqQscrype2W2OzN-MI")
+            .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0YWluZ3V5ZW5AZ21haWwuY29tIiwiaWF0IjoxNzE0ODk2Njg1LCJleHAiOjE3MTU3ODU3MTh9.8fmCADR1Wb3kOhBHS4N1zZvgTGd5GqAg_FNYB3n8Lf4")
             .build()
         chain.proceed(request)
     }
