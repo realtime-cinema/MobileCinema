@@ -5,9 +5,12 @@ import com.example.momocinema.repository.CinemaRespone
 import com.example.momocinema.repository.CinemaRoomRespone
 import com.example.momocinema.repository.CommentRespone
 import com.example.momocinema.repository.FilmRespone
+import com.example.momocinema.repository.PICK_SEAT
 import com.example.momocinema.repository.PerformRespone
 import com.example.momocinema.repository.PickSeatRespone
+import com.example.momocinema.repository.PostSeatRespone
 import com.example.momocinema.repository.RankingRespone
+import com.example.momocinema.repository.SEAT_CHANGE
 import com.example.momocinema.repository.SeatPriceRespone
 import com.example.momocinema.repository.USER
 import com.example.momocinema.repository.USERPOST
@@ -16,6 +19,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -41,8 +45,16 @@ interface APIService{
     suspend fun getPickSeatOfPerform(
         @Path("idPerform") idPerform : String,
     ):Response<PickSeatRespone>
-    @GET("/api/v1/rooms") //cinema room
-    suspend fun getCinemaRoom():CinemaRoomRespone
+    @POST("/api/v1/pick-seat/{idPerform}")
+    suspend fun postSeatOfPerform(
+        @Path("idPerform") idPerform : String,
+        @Body seat:List<PICK_SEAT>
+    ):Response<PostSeatRespone>
+    @DELETE("/api/v1/pick-seat/{idPerform}")
+    suspend fun deleteSeatOfPerform(
+        @Path("idPerform") idPerform : String,
+        @Body seat:PICK_SEAT
+    ):Response<PickSeatRespone>
     @GET("/api/v1/cinemas") //cinema
     suspend fun getAllCinema():CinemaRespone
     @GET("") //cinema layout

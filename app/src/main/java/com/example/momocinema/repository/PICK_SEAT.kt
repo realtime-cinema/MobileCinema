@@ -13,7 +13,19 @@ data class PICK_SEAT(
     val y:Int? = null,
 ):Parcelable
 
+data class SEAT_CHANGE(
+    val id:String? = null,
+    val userDTO:USER? = null,
+    val performDTO:PERFORM? = null,
+    val x:String? = null,
+    val y:String? = null,
+)
+
 data class PickSeatRespone(
     val message:String,
     val data:List<PICK_SEAT>
+)
+data class PostSeatRespone(
+    val performID:String,
+    val seats:List<PICK_SEAT>
 )

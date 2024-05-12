@@ -166,7 +166,7 @@ fun CinemaTicketApp(
         }
         composable(ScreenName.SelectSeatScreen.route){
             var perform = navControler.previousBackStackEntry?.savedStateHandle?.get<PERFORM>("perform")
-            SelectSeatScreen(selectSeetViewModel,perform = perform!!, {
+            SelectSeatScreen(mainViewModel,selectSeetViewModel,perform = perform!!, {
                 navControler.currentBackStackEntry?.savedStateHandle?.set("perform", perform)
                 navControler.navigate(it)
             })

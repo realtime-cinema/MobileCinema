@@ -40,6 +40,9 @@ android {
     buildFeatures {
         compose = true
     }
+    buildFeatures {
+        viewBinding = true
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
@@ -51,6 +54,9 @@ android {
 }
 
 dependencies {
+//    Socket.io
+    implementation("io.socket:socket.io-client:2.0.0")
+    implementation("io.socket:engine.io-client:2.0.0")
 //    View Model and Live Data
     val lifecycle_version = "2.7.0"
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")

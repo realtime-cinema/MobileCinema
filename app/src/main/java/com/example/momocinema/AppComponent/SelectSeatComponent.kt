@@ -102,7 +102,7 @@ fun Seat(seat: SEAT_PRICE, availableSeat: Boolean, selectingSeat: Boolean, onCli
         if (seat.type == "VIP") Color.Red */else Color(0xFFEA3FF7)
     }
 
-    val seatName = /*"${Char('A'.code + seat.y!! - 1)}${seat.x}"*/"A"+"1"
+    val seatName = /*"${Char('A'.code + seat.y!! - 1)}${seat.x}"*/"${seat.x}:${seat.y}"
     Button(
         onClick = if(availableSeat)onClick else onClickUnavaiableSeat,
         enabled = availableSeat,

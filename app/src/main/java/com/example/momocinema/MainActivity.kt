@@ -2,42 +2,18 @@ package com.example.momocinema
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
-import com.example.momocinema.AppComponent.restrictAgeTag
-import com.example.momocinema.AppComponent.selectDate
 import com.example.momocinema.ViewModel.FilmInfoViewModel
 import com.example.momocinema.ViewModel.LoginViewModel
 import com.example.momocinema.ViewModel.MainViewModel
@@ -52,22 +28,25 @@ import com.example.momocinema.ViewModelFactory.RegisterViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectFilmViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectPerformViewModelFactory
 import com.example.momocinema.ViewModelFactory.SelectSeetViewModelFactory
-import com.example.momocinema.data.Datasource
-import com.example.momocinema.data.DatasourceCloneAPIData
 import com.example.momocinema.navigation.CinemaTicketApp
-import com.example.momocinema.repository.FILM
-import com.example.momocinema.repository.PERFORM
-import com.example.momocinema.screens.FilmInfo
-import com.example.momocinema.screens.SelectFilmScreen
-import com.example.momocinema.screens.SelectSeatScreen
 import com.example.momocinema.ui.theme.MomoCinemaTheme
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
+import io.socket.engineio.client.transports.WebSocket
+import java.net.URISyntaxException
+
 
 class MainActivity : ComponentActivity() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
+
+
         val mainViewModelFactory = MainViewModelFactory()
         val mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
 
